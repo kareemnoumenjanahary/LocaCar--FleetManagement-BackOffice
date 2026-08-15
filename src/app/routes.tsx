@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../features/auth/components/LoginPage';
 import { CategoriesPage } from '../features/categories/components/CategoriesPage';
+import { AgenciesPage } from '../features/agency/components/AgenciesPage';
 
 const DashboardPage = () => {
   return (
@@ -34,6 +35,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <nav className="space-y-2">
             <a href="/dashboard" className="block px-3 py-2.5 rounded-xl hover:bg-slate-800 transition font-medium">📊 Dashboard</a>
             <a href="/categories" className="block px-3 py-2.5 rounded-xl hover:bg-slate-800 transition font-medium">📁 Categories</a>
+            <a href="/agencies" className="block px-3 py-2.5 rounded-xl hover:bg-slate-800 transition font-medium">🏢 Agencies</a>
             <a href="/vehicles" className="block px-3 py-2.5 rounded-xl hover:bg-slate-800 transition font-medium">🚗 Fleet Management</a>
             <a href="/reservations" className="block px-3 py-2.5 rounded-xl hover:bg-slate-800 transition font-medium">📅 Reservations</a>
           </nav>
@@ -72,6 +74,16 @@ export const AppRoutes = () => {
             <ProtectedRoute>
               <AdminLayout>
                 <CategoriesPage />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/agencies"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AgenciesPage />
               </AdminLayout>
             </ProtectedRoute>
           }
