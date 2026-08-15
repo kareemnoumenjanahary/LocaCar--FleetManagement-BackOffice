@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../features/auth/components/LoginPage';
 import { CategoriesPage } from '../features/categories/components/CategoriesPage';
 import { AgenciesPage } from '../features/agency/components/AgenciesPage';
+import { VehiclesPage } from '../features/vehicles/components/VehiclesPage';
 
 const DashboardPage = () => {
   return (
@@ -93,7 +94,7 @@ export const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <AdminLayout>
-                <div className="text-2xl font-bold text-slate-800">Fleet Management Panel</div>
+                <VehiclesPage />
               </AdminLayout>
             </ProtectedRoute>
           }
