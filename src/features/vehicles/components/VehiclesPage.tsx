@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../../shared/api/axiosInstance';
 import { VehiclePhotoModal } from './VehiclesPhotoModal';
+import { VehicleDocumentModal } from './VehiclesDocumentModal'; // Import ajouté
 
 interface Vehicle {
   id: number;
@@ -57,6 +58,7 @@ export const VehiclesPage: React.FC = () => {
   const [categoryId, setCategoryId] = useState('');
 
   const [photoVehicleId, setPhotoVehicleId] = useState<string | null>(null);
+  const [docVehicleId, setDocVehicleId] = useState<string | null>(null); // État pour le modal Document
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -254,6 +256,7 @@ export const VehiclesPage: React.FC = () => {
         </div>
       )}
 
+      {/* Modal des Photos */}
       <VehiclePhotoModal
         vehicleId={photoVehicleId ?? ''}
         onClose={() => setPhotoVehicleId(null)}
@@ -265,6 +268,21 @@ export const VehiclesPage: React.FC = () => {
           setError(err);
         }}
       />
+
+      {/* Modal des Documents (Intégré ici) */}
+      {docVehicleId && (
+        <VehicleDocumentModal
+          vehicleId={docVehicleId}
+          onClose={() => setDocVehicleId(null)}
+          onSuccess={(msg: string) => {
+            setSuccessMessage(msg);
+            setTimeout(() => setSuccessMessage(''), 3000);
+          }}
+          onError={(err: string) => {
+            setError(err);
+          }}
+        />
+      )}
 
       {showForm && (
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 max-w-3xl mx-auto">
@@ -601,6 +619,13 @@ export const VehiclesPage: React.FC = () => {
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold rounded-xl transition shadow-sm"
                           >
                             Photo
+                          </button>
+                          {/* Bouton pour ouvrir le modal des documents */}
+                          <button 
+                            onClick={() => setDocVehicleId(vehicle.id.toString())} 
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-xl transition shadow-sm"
+                          >
+                            Doc
                           </button>
                           <button 
                             onClick={() => handleEdit(vehicle)} 
