@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../../shared/api/axiosInstance';
+import { VehiclePhotoModal } from './VehiclesPhotoModal';
 
 interface Vehicle {
   id: number;
@@ -40,7 +41,8 @@ export const VehiclesPage: React.FC = () => {
   const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Form fields matching CreateVehicleDTO
+  const [showForm, setShowForm] = useState(false);
+
   const [licensePlate, setLicensePlate] = useState('');
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
@@ -53,6 +55,8 @@ export const VehiclesPage: React.FC = () => {
   const [specificDailyRate, setSpecificDailyRate] = useState('');
   const [agencyId, setAgencyId] = useState('');
   const [categoryId, setCategoryId] = useState('');
+
+  const [photoVehicleId, setPhotoVehicleId] = useState<string | null>(null);
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -74,7 +78,6 @@ export const VehiclesPage: React.FC = () => {
         api.get('/categories').catch(() => ({ data: [] }))
       ]);
 
-      // --- 1. Traitement blindé des véhicules ---
       let data: Vehicle[] = [];
       let pages = 1;
       const resData = vehicleRes.data;
@@ -95,7 +98,6 @@ export const VehiclesPage: React.FC = () => {
       setVehicles(data);
       setTotalPages(pages);
 
-      // --- 2. Traitement blindé des agences (évite le select vide) ---
       const rawAgencies = agencyRes.data;
       let parsedAgencies: Agency[] = [];
       if (Array.isArray(rawAgencies)) {
@@ -109,7 +111,6 @@ export const VehiclesPage: React.FC = () => {
       }
       setAgencies(parsedAgencies);
 
-      // --- 3. Traitement blindé des catégories ---
       const rawCategories = categoryRes.data;
       let parsedCategories: Category[] = [];
       if (Array.isArray(rawCategories)) {
@@ -193,6 +194,7 @@ export const VehiclesPage: React.FC = () => {
     setSpecificDailyRate(vehicle.specificDailyRate || '');
     setAgencyId(vehicle.agencyId);
     setCategoryId(vehicle.categoryId);
+    setShowForm(true);
     setError('');
     setSuccessMessage('');
   };
@@ -224,13 +226,25 @@ export const VehiclesPage: React.FC = () => {
     setSpecificDailyRate('');
     setAgencyId('');
     setCategoryId('');
+    setShowForm(false);
   };
 
   return (
     <div className="space-y-8 relative">
-      <div>
-        <h2 className="text-2xl font-bold text-slate-800">Fleet Management</h2>
-        <p className="text-slate-600">Manage vehicles, specs, assignments, and availability status.</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-800">Fleet Management</h2>
+          <p className="text-slate-600">Manage vehicles, specs, assignments, and availability status.</p>
+        </div>
+        
+        {!showForm && (
+          <button
+            onClick={() => { resetForm(); setShowForm(true); }}
+            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-md transition flex items-center gap-2"
+          >
+            <span>+</span> Add New Vehicle
+          </button>
+        )}
       </div>
 
       {successMessage && (
@@ -240,11 +254,31 @@ export const VehiclesPage: React.FC = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
-          <h3 className="text-lg font-semibold text-slate-800">
-            {editingId ? 'Edit Vehicle' : 'Add New Vehicle'}
-          </h3>
+      <VehiclePhotoModal
+        vehicleId={photoVehicleId ?? ''}
+        onClose={() => setPhotoVehicleId(null)}
+        onSuccess={(msg: string) => {
+          setSuccessMessage(msg);
+          setTimeout(() => setSuccessMessage(''), 3000);
+        }}
+        onError={(err: string) => {
+          setError(err);
+        }}
+      />
+
+      {showForm && (
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 max-w-3xl mx-auto">
+          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+            <h3 className="text-lg font-semibold text-slate-800">
+              {editingId ? 'Edit Vehicle' : 'Add New Vehicle'}
+            </h3>
+            <button 
+              onClick={resetForm} 
+              className="text-slate-400 hover:text-slate-600 font-bold text-lg px-2 py-1"
+            >
+              ✕
+            </button>
+          </div>
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
@@ -270,7 +304,7 @@ export const VehiclesPage: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Brand</label>
                 <input 
@@ -297,7 +331,7 @@ export const VehiclesPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Year</label>
                 <input 
@@ -323,7 +357,7 @@ export const VehiclesPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Gearbox</label>
                 <select 
@@ -350,7 +384,7 @@ export const VehiclesPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Initial Mileage</label>
                 <input 
@@ -425,190 +459,194 @@ export const VehiclesPage: React.FC = () => {
               >
                 {loading ? 'Saving...' : (editingId ? 'Update Vehicle' : 'Create Vehicle')}
               </button>
-              {editingId && (
-                <button 
-                  type="button" 
-                  onClick={resetForm} 
-                  className="py-2.5 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition"
-                >
-                  Cancel
-                </button>
-              )}
+              <button 
+                type="button" 
+                onClick={resetForm} 
+                className="py-2.5 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition"
+              >
+                Cancel
+              </button>
             </div>
           </form>
         </div>
+      )}
 
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-          <h3 className="text-lg font-semibold text-slate-800">Fleet Inventory</h3>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
-            <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </span>
-              <input 
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
-                placeholder="Search brand, plate..." 
-                className="w-full pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-
-            <div>
-              <select 
-                value={statusFilter}
-                onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <h3 className="text-lg font-semibold text-slate-800">Fleet Inventory</h3>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div className="relative">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </span>
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
+              placeholder="Search brand, plate..." 
+              className="w-full pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold"
               >
-                <option value="">All Statuses</option>
-                <option value="AVAILABLE">AVAILABLE</option>
-                <option value="RENTED">RENTED</option>
-                <option value="MAINTENANCE">MAINTENANCE</option>
-              </select>
-            </div>
-
-            <div>
-              <select 
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                <option value="brand">Sort by Brand</option>
-                <option value="year">Sort by Year</option>
-              </select>
-            </div>
-
-            <div>
-              <select 
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value as 'ASC' | 'DESC')}
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                <option value="ASC">Ascending</option>
-                <option value="DESC">Descending</option>
-              </select>
-            </div>
+                ✕
+              </button>
+            )}
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
-                  <th className="py-3 px-4">Vehicle</th>
-                  <th className="py-3 px-4">Plate</th>
-                  <th className="py-3 px-4">Specs</th>
-                  <th className="py-3 px-4">Mileage</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Actions</th>
+          <div>
+            <select 
+              value={statusFilter}
+              onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="">All Statuses</option>
+              <option value="AVAILABLE">AVAILABLE</option>
+              <option value="RENTED">RENTED</option>
+              <option value="MAINTENANCE">MAINTENANCE</option>
+            </select>
+          </div>
+
+          <div>
+            <select 
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="brand">Sort by Brand</option>
+              <option value="year">Sort by Year</option>
+            </select>
+          </div>
+
+          <div>
+            <select 
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value as 'ASC' | 'DESC')}
+              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="ASC">Ascending</option>
+              <option value="DESC">Descending</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
+                <th className="py-3 px-4">Vehicle</th>
+                <th className="py-3 px-4">Plate</th>
+                <th className="py-3 px-4">Specs</th>
+                <th className="py-3 px-4">Mileage</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
+              {loadingList ? (
+                <tr>
+                  <td colSpan={6} className="py-6 text-center text-slate-400">Loading vehicles...</td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
-                {loadingList ? (
-                  <tr>
-                    <td colSpan={6} className="py-6 text-center text-slate-400">Loading vehicles...</td>
-                  </tr>
-                ) : vehicles.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="py-6 text-center text-slate-400">
-                      No matching vehicles found.
+              ) : vehicles.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-6 text-center text-slate-400">
+                    No matching vehicles found.
+                  </td>
+                </tr>
+              ) : (
+                vehicles.map((vehicle) => (
+                  <tr key={vehicle.id} className="hover:bg-slate-50 transition">
+                    <td className="py-3 px-4">
+                      <div className="font-semibold text-slate-900">{vehicle.brand} {vehicle.model}</div>
+                      <div className="text-xs text-slate-400">{vehicle.year} • {vehicle.seats} seats</div>
+                    </td>
+                    <td className="py-3 px-4 font-mono text-xs font-semibold text-slate-700">{vehicle.licensePlate}</td>
+                    <td className="py-3 px-4 text-xs text-slate-500">
+                      {vehicle.gearboxType} / {vehicle.fuelType}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600">{vehicle.initialMileage} km</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        vehicle.status === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-700' : 
+                        vehicle.status === 'RENTED' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'
+                      }`}>
+                        {vehicle.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      {deletingId === vehicle.id ? (
+                        <div className="flex items-center space-x-2 bg-red-50 p-1.5 rounded-xl border border-red-200 shadow-sm">
+                          <span className="text-xs text-red-700 font-semibold px-1">Delete?</span>
+                          <button 
+                            onClick={() => confirmDelete(vehicle.id)} 
+                            className="px-2.5 py-1 bg-red-600 text-white text-xs rounded-lg font-medium hover:bg-red-700 transition shadow-sm"
+                          >
+                            Yes
+                          </button>
+                          <button 
+                            onClick={() => setDeletingId(null)} 
+                            className="px-2.5 py-1 bg-slate-200 text-slate-700 text-xs rounded-lg font-medium hover:bg-slate-300 transition"
+                          >
+                            No
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => setPhotoVehicleId(vehicle.id.toString())} 
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold rounded-xl transition shadow-sm"
+                          >
+                            Photo
+                          </button>
+                          <button 
+                            onClick={() => handleEdit(vehicle)} 
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition shadow-sm"
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => setDeletingId(vehicle.id)} 
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold rounded-xl transition shadow-sm"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
-                ) : (
-                  vehicles.map((vehicle) => (
-                    <tr key={vehicle.id} className="hover:bg-slate-50 transition">
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-slate-900">{vehicle.brand} {vehicle.model}</div>
-                        <div className="text-xs text-slate-400">{vehicle.year} • {vehicle.seats} seats</div>
-                      </td>
-                      <td className="py-3 px-4 font-mono text-xs font-semibold text-slate-700">{vehicle.licensePlate}</td>
-                      <td className="py-3 px-4 text-xs text-slate-500">
-                        {vehicle.gearboxType} / {vehicle.fuelType}
-                      </td>
-                      <td className="py-3 px-4 text-slate-600">{vehicle.initialMileage} km</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          vehicle.status === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-700' : 
-                          vehicle.status === 'RENTED' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'
-                        }`}>
-                          {vehicle.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        {deletingId === vehicle.id ? (
-                          <div className="flex items-center space-x-2 bg-red-50 p-1.5 rounded-xl border border-red-200 shadow-sm">
-                            <span className="text-xs text-red-700 font-semibold px-1">Delete?</span>
-                            <button 
-                              onClick={() => confirmDelete(vehicle.id)} 
-                              className="px-2.5 py-1 bg-red-600 text-white text-xs rounded-lg font-medium hover:bg-red-700 transition shadow-sm"
-                            >
-                              Yes
-                            </button>
-                            <button 
-                              onClick={() => setDeletingId(null)} 
-                              className="px-2.5 py-1 bg-slate-200 text-slate-700 text-xs rounded-lg font-medium hover:bg-slate-300 transition"
-                            >
-                              No
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => handleEdit(vehicle)} 
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition shadow-sm"
-                            >
-                              Edit
-                            </button>
-                            <button 
-                              onClick={() => setDeletingId(vehicle.id)} 
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold rounded-xl transition shadow-sm"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-              <span className="text-xs text-slate-500">
-                Page {page} of {totalPages}
-              </span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                  disabled={page === 1}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition disabled:opacity-40"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                  disabled={page === totalPages}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition disabled:opacity-40"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+            <span className="text-xs text-slate-500">
+              Page {page} of {totalPages}
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition disabled:opacity-40"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                disabled={page === totalPages}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
