@@ -31,7 +31,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchCurrentAdmin = async () => {
       try {
-        const response = await api.get('/me');
+        // Changement ici : /users/me pour correspondre au préfixe de la route Symfony
+        const response = await api.get('/users/me');
         setCurrentAdmin(response.data);
       } catch (err) {
         const cachedAdmin = localStorage.getItem('admin_user');
@@ -102,7 +103,6 @@ export const AppRoutes = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         
-        {/* Redirection automatique de la racine vers /dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         <Route path="/dashboard" element={<ProtectedRoute><AdminLayout><DashboardPage /></AdminLayout></ProtectedRoute>} />
@@ -111,7 +111,6 @@ export const AppRoutes = () => {
         <Route path="/vehicles" element={<ProtectedRoute><AdminLayout><VehiclesPage /></AdminLayout></ProtectedRoute>} />
         <Route path="/reservations" element={<ProtectedRoute><AdminLayout><ReservationsPage /></AdminLayout></ProtectedRoute>} />
         
-        {/* Route catch-all pour rediriger les URL inconnues */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
