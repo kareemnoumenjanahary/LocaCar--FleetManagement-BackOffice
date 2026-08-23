@@ -516,21 +516,21 @@ export const ReservationsPage: React.FC = () => {
                               <svg className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ml-2 ${activeActionDropdown === res.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
 
-{activeActionDropdown === res.id && (
-  <div className="absolute right-0 top-full mt-2 z-50 w-36 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
-    {availableStatuses.map((st) => (
-      <button
-        key={st}
-        type="button"
-        onClick={() => handleStatusChange(res.id, st)}
-        className={`w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between ${res.status === st ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
-      >
-        {st}
-        {res.status === st && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
-      </button>
-    ))}
-  </div>
-)}
+                            {activeActionDropdown === res.id && (
+                              <div className="absolute right-0 top-full mt-2 z-50 w-36 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
+                                {availableStatuses.map((st) => (
+                                  <button
+                                    key={st}
+                                    type="button"
+                                    onClick={() => handleStatusChange(res.id, st)}
+                                    className={`w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between ${res.status === st ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                                  >
+                                    {st}
+                                    {res.status === st && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         ) : <span className="text-xs text-slate-400 italic font-medium">Locked</span>}
                       </td>
