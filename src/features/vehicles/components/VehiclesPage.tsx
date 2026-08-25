@@ -31,6 +31,8 @@ interface Category {
   name: string;
 }
 
+type VehicleStatus = 'AVAILABLE' | 'RENTED' | 'MAINTENANCE';
+
 export const VehiclesPage: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [agencies, setAgencies] = useState<Agency[]>([]);
@@ -51,7 +53,7 @@ export const VehiclesPage: React.FC = () => {
   const [model, setModel] = useState('');
   const [licensePlate, setLicensePlate] = useState('');
   const [mileage, setMileage] = useState('');
-  const [status, setStatus] = useState('AVAILABLE');
+  const [status, setStatus] = useState<VehicleStatus>('AVAILABLE');
   const [agencyId, setAgencyId] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [gpsDeviceId, setGpsDeviceId] = useState('');
@@ -98,54 +100,78 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const extractList = (response: any): any[] => {
+    const raw = response?.data ?? response;
+
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw?.data)) return raw.data;
+    if (Array.isArray(raw?.items)) return raw.items;
+    if (Array.isArray(raw?.vehicles)) return raw.vehicles;
+    if (Array.isArray(raw?.results)) return raw.results;
+    if (Array.isArray(raw?.['hydra:member'])) return raw['hydra:member'];
+
+    return [];
+  };
+
+  const getApiErrorMessage = (err: any): string => {
+    return (
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      'Impossible de charger les véhicules.'
+    );
+  };
+
   const fetchData = async () => {
     setLoadingList(true);
+    setError('');
+
     try {
-      const params: any = { page, limit, sortBy, sortOrder };
+      const params: Record<string, string | number> = {
+        page,
+        limit,
+        sortBy,
+        sortOrder,
+      };
+
       if (searchQuery.trim()) params.search = searchQuery.trim();
       if (statusFilter) params.status = statusFilter;
 
-      const [vehicleRes, agencyRes, categoryRes] = await Promise.all([
-        api.get('/vehicles', { params }),
-        api.get('/agencies').catch(() => ({ data: [] })),
-        api.get('/categories').catch(() => ({ data: [] }))
-      ]);
-
-      let data: Vehicle[] = [];
-      let pages = 1;
-      const resData = vehicleRes.data;
-
-      if (Array.isArray(resData)) {
-        data = resData;
-      } else if (resData && Array.isArray(resData.data)) {
-        data = resData.data;
-        if (resData.totalPages) pages = resData.totalPages;
-      } else if (resData && Array.isArray(resData['hydra:member'])) {
-        data = resData['hydra:member'];
-      } else if (resData && Array.isArray(resData.items)) {
-        data = resData.items;
-        if (resData.totalPages) pages = resData.totalPages;
-        else if (resData.meta?.totalPages) pages = resData.meta.totalPages;
-      }
+      const vehicleRes = await api.get('/vehicles', { params });
+      const rawVehicleData = vehicleRes?.data;
+      const data = extractList(rawVehicleData) as Vehicle[];
+      const pagination = rawVehicleData?.data ?? rawVehicleData;
+      const pages = Number(
+        pagination?.totalPages ??
+        pagination?.meta?.totalPages ??
+        pagination?.pagination?.totalPages ??
+        1
+      );
 
       setVehicles(data);
-      setTotalPages(pages);
+      setTotalPages(Number.isFinite(pages) && pages > 0 ? pages : 1);
 
-      const parseList = (res: any) => {
-        const raw = res.data;
-        if (Array.isArray(raw)) return raw;
-        if (raw && Array.isArray(raw.data)) return raw.data;
-        if (raw && Array.isArray(raw['hydra:member'])) return raw['hydra:member'];
-        if (raw && Array.isArray(raw.items)) return raw.items;
-        return [];
-      };
+      // Les données secondaires ne doivent jamais empêcher l’affichage des véhicules.
+      const [agencyRes, categoryRes] = await Promise.allSettled([
+        api.get('/agencies'),
+        api.get('/categories'),
+      ]);
 
-      setAgencies(parseList(agencyRes));
-      setCategories(parseList(categoryRes));
+      if (agencyRes.status === 'fulfilled') {
+        setAgencies(extractList(agencyRes.value));
+      } else {
+        setAgencies([]);
+      }
 
+      if (categoryRes.status === 'fulfilled') {
+        setCategories(extractList(categoryRes.value));
+      } else {
+        setCategories([]);
+      }
     } catch (err: any) {
-      setError('Failed to load vehicles data.');
-      setVehicles([]);
+      console.error('GET /vehicles failed:', err?.response?.data || err);
+      setError(`Erreur lors du chargement des véhicules : ${getApiErrorMessage(err)}`);
+      // Ne pas remplacer les anciennes données par une liste vide si le refresh échoue.
     } finally {
       setLoadingList(false);
     }
@@ -206,7 +232,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     setModel(vehicle.model);
     setLicensePlate(vehicle.licensePlate);
     setMileage(vehicle.mileage ? vehicle.mileage.toString() : '');
-    setStatus(vehicle.status);
+    setStatus(normalizeVehicleStatus(vehicle.status));
     setAgencyId(String(vehicle.agencyId || ''));
     setCategoryId(String(vehicle.categoryId || ''));
     setGpsDeviceId(vehicle.gpsDeviceId || '');
@@ -251,11 +277,74 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     setShowForm(false);
   };
 
+  const VEHICLE_STATUSES: VehicleStatus[] = ['AVAILABLE', 'RENTED', 'MAINTENANCE'];
+
+  const normalizeVehicleStatus = (value: string): VehicleStatus => {
+    return VEHICLE_STATUSES.includes(value as VehicleStatus)
+      ? (value as VehicleStatus)
+      : 'AVAILABLE';
+  };
+
   const statusLabels: Record<string, string> = {
     '': 'All Statuses',
-    'AVAILABLE': 'AVAILABLE',
-    'RENTED': 'RENTED',
-    'MAINTENANCE': 'MAINTENANCE'
+    AVAILABLE: 'Available',
+    RENTED: 'Rented',
+    MAINTENANCE: 'Maintenance',
+  };
+
+  const getStatusClasses = (vehicleStatus: string) => {
+    switch (vehicleStatus) {
+      case 'AVAILABLE': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'RENTED': return 'bg-blue-50 text-blue-700 border-blue-200';
+      case 'MAINTENANCE': return 'bg-amber-50 text-amber-700 border-amber-200';
+      default: return 'bg-slate-100 text-slate-600 border-slate-300';
+    }
+  };
+
+  const handleStatusChange = async (vehicle: Vehicle, nextStatus: VehicleStatus) => {
+    if (vehicle.status === nextStatus) {
+      setActiveDropdown(null);
+      return;
+    }
+
+    const previousStatus = vehicle.status;
+    setActiveDropdown(null);
+    setError('');
+    setSuccessMessage('');
+
+    setVehicles((currentVehicles) =>
+      currentVehicles.map((item) =>
+        item.id === vehicle.id ? { ...item, status: nextStatus } : item
+      )
+    );
+
+    try {
+      await api.put(`/vehicles/${vehicle.id}`, {
+        brand: vehicle.brand,
+        model: vehicle.model,
+        licensePlate: vehicle.licensePlate,
+        initialMileage: String(vehicle.mileage ?? 0),
+        status: nextStatus,
+        agencyId: vehicle.agencyId || null,
+        categoryId: vehicle.categoryId || null,
+        gpsDeviceId: vehicle.gpsDeviceId || null,
+        year: vehicle.year ?? null,
+        seats: vehicle.seats ?? null,
+        gearboxType: vehicle.gearboxType || 'MANUAL',
+        fuelType: vehicle.fuelType || 'GASOLINE',
+        specificDailyRate: vehicle.specificDailyRate ?? null,
+      });
+
+      setSuccessMessage(`Status updated to ${statusLabels[nextStatus]}.`);
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err: any) {
+      setVehicles((currentVehicles) =>
+        currentVehicles.map((item) =>
+          item.id === vehicle.id ? { ...item, status: previousStatus } : item
+        )
+      );
+      setError(err.response?.data?.message || 'Failed to update vehicle status.');
+    }
   };
 
   const sortByLabels: Record<string, string> = {
@@ -293,6 +382,19 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
         <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center space-x-3 text-sm transition-all animate-bounce">
           <span className="text-emerald-400 text-lg">✅</span>
           <span className="font-medium">{successMessage}</span>
+        </div>
+      )}
+
+      {error && !showForm && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-center justify-between">
+          <span>⚠️ {error}</span>
+          <button
+            type="button"
+            onClick={() => setError('')}
+            className="ml-4 font-bold text-red-500 hover:text-red-700"
+          >
+            ×
+          </button>
         </div>
       )}
 
@@ -493,7 +595,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                 </button>
                 {activeDropdown === 'formStatus' && (
                   <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
-                    {['AVAILABLE', 'RENTED', 'MAINTENANCE'].map((s) => (
+                    {VEHICLE_STATUSES.map((s) => (
                       <button
                         key={s}
                         type="button"
@@ -736,13 +838,38 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                     <td className="p-3.5 text-slate-600">{v.licensePlate}</td>
                     <td className="p-3.5 text-slate-600">{v.mileage} km</td>
                     <td className="p-3.5">
-                      <span className={`px-2.5 py-1 text-xs font-bold rounded-lg border ${
-                        v.status === 'AVAILABLE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                        v.status === 'RENTED' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                        'bg-amber-50 text-amber-700 border-amber-200'
-                      }`}>
-                        {v.status}
-                      </span>
+                      <div className="relative custom-dropdown inline-block">
+                        <button
+                          type="button"
+                          onClick={() => setActiveDropdown(activeDropdown === `status-${v.id}` ? null : `status-${v.id}`)}
+                          className={`inline-flex min-w-[145px] items-center justify-between gap-2 px-3 py-1.5 text-xs font-bold rounded-lg border transition hover:shadow-sm ${getStatusClasses(v.status)}`}
+                          aria-haspopup="listbox"
+                          aria-expanded={activeDropdown === `status-${v.id}`}
+                        >
+                          <span>{statusLabels[v.status] || v.status}</span>
+                          <svg className={`h-3.5 w-3.5 transition-transform ${activeDropdown === `status-${v.id}` ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m6 9 6 6 6-6" />
+                          </svg>
+                        </button>
+
+                        {activeDropdown === `status-${v.id}` && (
+                          <div className="absolute left-0 top-full z-30 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl" role="listbox">
+                            {VEHICLE_STATUSES.map((availableStatus) => (
+                              <button
+                                key={availableStatus}
+                                type="button"
+                                onClick={() => handleStatusChange(v, availableStatus)}
+                                className={`flex w-full items-center justify-between px-3 py-2 text-left text-xs transition hover:bg-slate-50 ${v.status === availableStatus ? 'bg-purple-50 font-bold text-purple-700' : 'text-slate-700'}`}
+                                role="option"
+                                aria-selected={v.status === availableStatus}
+                              >
+                                <span>{statusLabels[availableStatus]}</span>
+                                {v.status === availableStatus && <span className="h-1.5 w-1.5 rounded-full bg-purple-600" />}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td className="p-3.5 text-right flex items-center justify-end gap-2">
                       {/* Bouton pour ouvrir le modal des photos */}
