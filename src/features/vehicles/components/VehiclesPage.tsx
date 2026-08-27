@@ -294,10 +294,10 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const getStatusClasses = (vehicleStatus: string) => {
     switch (vehicleStatus) {
-      case 'AVAILABLE': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-      case 'RENTED': return 'bg-blue-50 text-blue-700 border-blue-200';
-      case 'MAINTENANCE': return 'bg-amber-50 text-amber-700 border-amber-200';
-      default: return 'bg-slate-100 text-slate-600 border-slate-300';
+      case 'AVAILABLE': return 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-700';
+      case 'RENTED': return 'bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700';
+      case 'MAINTENANCE': return 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700';
+      default: return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600';
     }
   };
 
@@ -364,8 +364,8 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     <div className="space-y-8 relative">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Vehicles Management</h2>
-          <p className="text-slate-600">Manage your fleet, specifications, and availability status.</p>
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Vehicles Management</h2>
+          <p className="text-slate-600 dark:text-slate-300">Manage your fleet, specifications, and availability status.</p>
         </div>
         
         {!showForm && (
@@ -386,12 +386,12 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
       )}
 
       {error && !showForm && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-center justify-between">
+        <div className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 px-4 py-3 text-sm text-red-700 dark:text-red-300 flex items-center justify-between">
           <span>⚠️ {error}</span>
           <button
             type="button"
             onClick={() => setError('')}
-            className="ml-4 font-bold text-red-500 hover:text-red-700"
+            className="ml-4 font-bold text-red-500 dark:text-red-400 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 dark:text-red-300"
           >
             ×
           </button>
@@ -399,114 +399,114 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
       )}
 
       {showForm && (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 max-w-3xl mx-auto">
-          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-            <h3 className="text-lg font-semibold text-slate-800">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-4 max-w-3xl mx-auto">
+          <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
               {editingId ? 'Edit Vehicle' : 'New Vehicle'}
             </h3>
             <button 
               onClick={resetForm} 
-              className="text-slate-400 hover:text-slate-600 font-bold text-lg px-2 py-1 cursor-pointer"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 font-bold text-lg px-2 py-1 cursor-pointer"
             >
               ✕
             </button>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
+            <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
               <span className="flex items-center space-x-2">
                 <span>⚠️</span>
                 <span>{error}</span>
               </span>
-              <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 font-bold ml-2">×</button>
+              <button onClick={() => setError('')} className="text-red-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 dark:text-red-300 font-bold ml-2">×</button>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Brand</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Brand</label>
                 <input 
                   type="text" 
                   value={brand} 
                   onChange={(e) => setBrand(e.target.value)} 
                   required 
                   placeholder="e.g. Toyota" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Model</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Model</label>
                 <input 
                   type="text" 
                   value={model} 
                   onChange={(e) => setModel(e.target.value)} 
                   required 
                   placeholder="e.g. Corolla" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">License Plate</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">License Plate</label>
                 <input 
                   type="text" 
                   value={licensePlate} 
                   onChange={(e) => setLicensePlate(e.target.value)} 
                   required 
                   placeholder="e.g. AB-123-CD" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Year</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Year</label>
                 <input 
                   type="number" 
                   value={year} 
                   onChange={(e) => setYear(e.target.value)} 
                   placeholder="e.g. 2022" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Seats</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Seats</label>
                 <input 
                   type="number" 
                   value={seats} 
                   onChange={(e) => setSeats(e.target.value)} 
                   placeholder="e.g. 5" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Initial Mileage (km)</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Initial Mileage (km)</label>
                 <input 
                   type="number" 
                   value={mileage} 
                   onChange={(e) => setMileage(e.target.value)} 
                   placeholder="e.g. 15000" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
 
               {/* Gearbox Type Dropdown */}
               <div className="relative custom-dropdown">
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Gearbox Type</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Gearbox Type</label>
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === 'formGearbox' ? null : 'formGearbox')}
-                  className={`w-full flex items-center justify-between bg-white border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'formGearbox' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 hover:border-slate-300'}`}
+                  className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'formGearbox' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'}`}
                 >
-                  <span className="font-medium text-slate-900">{gearboxType === 'MANUAL' ? 'Manual' : 'Automatic'}</span>
+                  <span className="font-medium text-slate-900 dark:text-slate-100">{gearboxType === 'MANUAL' ? 'Manual' : 'Automatic'}</span>
                   <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'formGearbox' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {activeDropdown === 'formGearbox' && (
-                  <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+                  <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                     {[
                       { val: 'MANUAL', label: 'Manual' },
                       { val: 'AUTOMATIC', label: 'Automatic' }
@@ -515,7 +515,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                         key={item.val}
                         type="button"
                         onClick={() => { setGearboxType(item.val); setActiveDropdown(null); }}
-                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${gearboxType === item.val ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${gearboxType === item.val ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                       >
                         {item.label}
                         {gearboxType === item.val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -527,17 +527,17 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
               {/* Fuel Type Dropdown */}
               <div className="relative custom-dropdown">
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Fuel Type</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Fuel Type</label>
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === 'formFuel' ? null : 'formFuel')}
-                  className={`w-full flex items-center justify-between bg-white border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'formFuel' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 hover:border-slate-300'}`}
+                  className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'formFuel' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'}`}
                 >
-                  <span className="font-medium text-slate-900">{fuelType.charAt(0) + fuelType.slice(1).toLowerCase()}</span>
+                  <span className="font-medium text-slate-900 dark:text-slate-100">{fuelType.charAt(0) + fuelType.slice(1).toLowerCase()}</span>
                   <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'formFuel' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {activeDropdown === 'formFuel' && (
-                  <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+                  <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                     {['GASOLINE', 'DIESEL', 'ELECTRIC', 'HYBRID'].map((f) => {
                       const label = f.charAt(0) + f.slice(1).toLowerCase();
                       return (
@@ -545,7 +545,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                           key={f}
                           type="button"
                           onClick={() => { setFuelType(f); setActiveDropdown(null); }}
-                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${fuelType === f ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${fuelType === f ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                         >
                           {label}
                           {fuelType === f && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -559,24 +559,24 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Specific Daily Rate ($)</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Specific Daily Rate ($)</label>
                 <input 
                   type="number" 
                   step="0.01"
                   value={specificDailyRate} 
                   onChange={(e) => setSpecificDailyRate(e.target.value)} 
                   placeholder="e.g. 45.00" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">GPS Device ID</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">GPS Device ID</label>
                 <input 
                   type="text" 
                   value={gpsDeviceId} 
                   onChange={(e) => setGpsDeviceId(e.target.value)} 
                   placeholder="e.g. GPS-TRK-334112" 
-                  className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                  className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
                 />
               </div>
             </div>
@@ -584,23 +584,23 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* Status */}
               <div className="relative custom-dropdown">
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Status</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Status</label>
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === 'formStatus' ? null : 'formStatus')}
-                  className={`w-full flex items-center justify-between bg-white border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'formStatus' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 hover:border-slate-300'}`}
+                  className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'formStatus' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'}`}
                 >
-                  <span className="font-medium text-slate-900">{status}</span>
+                  <span className="font-medium text-slate-900 dark:text-slate-100">{status}</span>
                   <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'formStatus' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {activeDropdown === 'formStatus' && (
-                  <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+                  <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                     {VEHICLE_STATUSES.map((s) => (
                       <button
                         key={s}
                         type="button"
                         onClick={() => { setStatus(s); setActiveDropdown(null); }}
-                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${status === s ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${status === s ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                       >
                         {s}
                         {status === s && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -612,21 +612,21 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
               {/* Agency */}
               <div className="relative custom-dropdown">
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Agency</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Agency</label>
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === 'formAgency' ? null : 'formAgency')}
-                  className={`w-full flex items-center justify-between bg-white border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'formAgency' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 hover:border-slate-300'}`}
+                  className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'formAgency' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'}`}
                 >
-                  <span className={`font-medium ${!agencyId ? 'text-slate-400' : 'text-slate-900'}`}>{selectedAgencyName}</span>
+                  <span className={`font-medium ${!agencyId ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>{selectedAgencyName}</span>
                   <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'formAgency' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {activeDropdown === 'formAgency' && (
-                  <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 max-h-48 overflow-y-auto">
+                  <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 max-h-48 overflow-y-auto">
                     <button
                       type="button"
                       onClick={() => { setAgencyId(''); setActiveDropdown(null); }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-slate-400 hover:bg-slate-50"
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-600"
                     >
                       Select Agency...
                     </button>
@@ -635,7 +635,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                         key={agency.id}
                         type="button"
                         onClick={() => { setAgencyId(String(agency.id)); setActiveDropdown(null); }}
-                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${String(agencyId) === String(agency.id) ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${String(agencyId) === String(agency.id) ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                       >
                         {agency.name}
                         {String(agencyId) === String(agency.id) && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -647,21 +647,21 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
               {/* Category */}
               <div className="relative custom-dropdown">
-                <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Category</label>
+                <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-300 uppercase mb-1">Category</label>
                 <button
                   type="button"
                   onClick={() => setActiveDropdown(activeDropdown === 'formCategory' ? null : 'formCategory')}
-                  className={`w-full flex items-center justify-between bg-white border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'formCategory' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 hover:border-slate-300'}`}
+                  className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'formCategory' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'}`}
                 >
-                  <span className={`font-medium ${!categoryId ? 'text-slate-400' : 'text-slate-900'}`}>{selectedCategoryName}</span>
+                  <span className={`font-medium ${!categoryId ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>{selectedCategoryName}</span>
                   <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'formCategory' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 {activeDropdown === 'formCategory' && (
-                  <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 max-h-48 overflow-y-auto">
+                  <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 max-h-48 overflow-y-auto">
                     <button
                       type="button"
                       onClick={() => { setCategoryId(''); setActiveDropdown(null); }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-slate-400 hover:bg-slate-50"
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-600"
                     >
                       Select Category...
                     </button>
@@ -670,7 +670,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                         key={category.id}
                         type="button"
                         onClick={() => { setCategoryId(String(category.id)); setActiveDropdown(null); }}
-                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${String(categoryId) === String(category.id) ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${String(categoryId) === String(category.id) ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                       >
                         {category.name}
                         {String(categoryId) === String(category.id) && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -692,7 +692,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
               <button 
                 type="button" 
                 onClick={resetForm} 
-                className="py-2.5 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition cursor-pointer"
+                className="py-2.5 px-4 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-100 border border-slate-300 dark:border-slate-600 font-semibold rounded-xl transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -701,12 +701,12 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-        <h3 className="text-lg font-semibold text-slate-800">Fleet List</h3>
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Fleet List</h3>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 dark:bg-slate-700 p-4 rounded-xl border border-slate-200 dark:border-slate-700 items-center">
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 dark:text-slate-500">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -716,12 +716,12 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
               placeholder="Search brand, model, plate..." 
-              className="w-full pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
+              className="w-full pl-9 pr-8 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 text-xs font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -733,19 +733,19 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
             <button
               type="button"
               onClick={() => setActiveDropdown(activeDropdown === 'filterStatus' ? null : 'filterStatus')}
-              className={`w-full flex items-center justify-between bg-white border rounded-xl px-3 py-2 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'filterStatus' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-300 hover:border-slate-400'}`}
+              className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3 py-2 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'filterStatus' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'}`}
             >
-              <span className="font-medium text-slate-900">{statusLabels[statusFilter]}</span>
+              <span className="font-medium text-slate-900 dark:text-slate-100">{statusLabels[statusFilter]}</span>
               <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'filterStatus' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             {activeDropdown === 'filterStatus' && (
-              <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+              <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                 {Object.entries(statusLabels).map(([val, label]) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => { setStatusFilter(val); setPage(1); setActiveDropdown(null); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${statusFilter === val ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${statusFilter === val ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                   >
                     {label}
                     {statusFilter === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -760,19 +760,19 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
             <button
               type="button"
               onClick={() => setActiveDropdown(activeDropdown === 'filterSort' ? null : 'filterSort')}
-              className={`w-full flex items-center justify-between bg-white border rounded-xl px-3 py-2 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'filterSort' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-300 hover:border-slate-400'}`}
+              className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3 py-2 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'filterSort' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'}`}
             >
-              <span className="font-medium text-slate-900">{sortByLabels[sortBy]}</span>
+              <span className="font-medium text-slate-900 dark:text-slate-100">{sortByLabels[sortBy]}</span>
               <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'filterSort' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             {activeDropdown === 'filterSort' && (
-              <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+              <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                 {Object.entries(sortByLabels).map(([val, label]) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => { setSortBy(val); setActiveDropdown(null); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${sortBy === val ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${sortBy === val ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                   >
                     {label}
                     {sortBy === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -787,19 +787,19 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
             <button
               type="button"
               onClick={() => setActiveDropdown(activeDropdown === 'filterOrder' ? null : 'filterOrder')}
-              className={`w-full flex items-center justify-between bg-white border rounded-xl px-3 py-2 text-sm text-slate-700 transition-all shadow-2xs text-left ${activeDropdown === 'filterOrder' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-300 hover:border-slate-400'}`}
+              className={`w-full flex items-center justify-between bg-white dark:bg-slate-800 border rounded-xl px-3 py-2 text-sm text-slate-700 dark:text-slate-200 transition-all shadow-2xs text-left ${activeDropdown === 'filterOrder' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500'}`}
             >
-              <span className="font-medium text-slate-900">{sortOrderLabels[sortOrder]}</span>
+              <span className="font-medium text-slate-900 dark:text-slate-100">{sortOrderLabels[sortOrder]}</span>
               <svg className={`w-4 h-4 text-purple-600 transition-transform duration-200 ${activeDropdown === 'filterOrder' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             {activeDropdown === 'filterOrder' && (
-              <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+              <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                 {Object.entries(sortOrderLabels).map(([val, label]) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => { setSortOrder(val as 'ASC' | 'DESC'); setActiveDropdown(null); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${sortOrder === val ? 'bg-purple-50/60 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${sortOrder === val ? 'bg-purple-50/60 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                   >
                     {label}
                     {sortOrder === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -811,10 +811,10 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
         </div>
 
         {/* Tableau des véhicules */}
-        <div className="overflow-x-auto border border-slate-200 rounded-xl">
+        <div className="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-xl">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <tr className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                 <th className="p-3.5">Vehicle</th>
                 <th className="p-3.5">License Plate</th>
                 <th className="p-3.5">Mileage</th>
@@ -822,21 +822,21 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                 <th className="p-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700 text-sm text-slate-700 dark:text-slate-200">
               {loadingList ? (
                 <tr>
-                  <td colSpan={5} className="p-6 text-center text-slate-400">Loading vehicles...</td>
+                  <td colSpan={5} className="p-6 text-center text-slate-400 dark:text-slate-500">Loading vehicles...</td>
                 </tr>
               ) : vehicles.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="p-6 text-center text-slate-400 italic">No vehicles found.</td>
+                  <td colSpan={5} className="p-6 text-center text-slate-400 dark:text-slate-500 italic">No vehicles found.</td>
                 </tr>
               ) : (
                 vehicles.map((v) => (
-                  <tr key={v.id} className="hover:bg-slate-50/50 transition">
-                    <td className="p-3.5 font-semibold text-slate-900">{v.brand} {v.model}</td>
-                    <td className="p-3.5 text-slate-600">{v.licensePlate}</td>
-                    <td className="p-3.5 text-slate-600">{v.mileage} km</td>
+                  <tr key={v.id} className="hover:bg-slate-50 dark:hover:bg-slate-600/50 transition">
+                    <td className="p-3.5 font-semibold text-slate-900 dark:text-slate-100">{v.brand} {v.model}</td>
+                    <td className="p-3.5 text-slate-600 dark:text-slate-300">{v.licensePlate}</td>
+                    <td className="p-3.5 text-slate-600 dark:text-slate-300">{v.mileage} km</td>
                     <td className="p-3.5">
                       <div className="relative custom-dropdown inline-block">
                         <button
@@ -853,13 +853,13 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                         </button>
 
                         {activeDropdown === `status-${v.id}` && (
-                          <div className="absolute left-0 top-full z-30 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl" role="listbox">
+                          <div className="absolute left-0 top-full z-30 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-1 shadow-xl" role="listbox">
                             {VEHICLE_STATUSES.map((availableStatus) => (
                               <button
                                 key={availableStatus}
                                 type="button"
                                 onClick={() => handleStatusChange(v, availableStatus)}
-                                className={`flex w-full items-center justify-between px-3 py-2 text-left text-xs transition hover:bg-slate-50 ${v.status === availableStatus ? 'bg-purple-50 font-bold text-purple-700' : 'text-slate-700'}`}
+                                className={`flex w-full items-center justify-between px-3 py-2 text-left text-xs transition hover:bg-slate-50 dark:hover:bg-slate-600 ${v.status === availableStatus ? 'bg-purple-50 font-bold text-purple-700 dark:text-purple-300' : 'text-slate-700 dark:text-slate-200'}`}
                                 role="option"
                                 aria-selected={v.status === availableStatus}
                               >
@@ -881,7 +881,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                             new CustomEvent('open-vehicle-photo-modal', { detail: { vehicleId: v.id } })
                           );
                         }}
-                        className="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold rounded-xl text-xs transition shadow-2xs cursor-pointer"
+                        className="px-3 py-1.5 bg-purple-50 dark:bg-purple-900/40 hover:bg-purple-100 dark:hover:bg-purple-800/60 text-purple-700 dark:text-purple-300 font-semibold rounded-xl text-xs transition shadow-2xs cursor-pointer"
                         title="Manage Photos"
                       >
                        Photos
@@ -891,7 +891,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                       <button
                         type="button"
                         onClick={() => setDocumentModalVehicleId(String(v.id))}
-                        className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold rounded-xl text-xs transition shadow-2xs cursor-pointer"
+                        className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/40 hover:bg-blue-100 dark:hover:bg-blue-800/60 text-blue-700 dark:text-blue-300 font-semibold rounded-xl text-xs transition shadow-2xs cursor-pointer"
                         title="Manage Documents"
                       >
                       Docs
@@ -899,7 +899,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
                       <button
                         type="button"
                         onClick={() => setGpsModalVehicleId(String(v.id))}
-                        className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold rounded-xl text-xs transition shadow-2xs cursor-pointer"
+                        className="px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/40 hover:bg-emerald-100 dark:hover:bg-emerald-800/60 text-emerald-700 dark:text-emerald-300 font-semibold rounded-xl text-xs transition shadow-2xs cursor-pointer"
                         title="Manage GPS"
                       >
                         GPS
@@ -907,14 +907,14 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
                       <button
                         onClick={() => handleEdit(v)}
-                        className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition cursor-pointer"
+                        className="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-xs transition cursor-pointer"
                       >
                         Edit
                       </button>
 
                       <button
                         onClick={() => setDeletingId(v.id)}
-                        className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-xl text-xs transition cursor-pointer"
+                        className="px-3 py-1.5 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/60 text-red-600 dark:text-red-300 font-semibold rounded-xl text-xs transition cursor-pointer"
                       >
                         Delete
                       </button>
@@ -932,15 +932,15 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
             <button
               disabled={page <= 1}
               onClick={() => setPage(p => Math.max(p - 1, 1))}
-              className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold disabled:opacity-40 hover:bg-slate-200 transition cursor-pointer"
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold disabled:opacity-40 hover:bg-slate-200 transition cursor-pointer"
             >
               Previous
             </button>
-            <span className="text-sm font-medium text-slate-600">Page {page} of {totalPages}</span>
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Page {page} of {totalPages}</span>
             <button
               disabled={page >= totalPages}
               onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-              className="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-semibold disabled:opacity-40 hover:bg-slate-200 transition cursor-pointer"
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold disabled:opacity-40 hover:bg-slate-200 transition cursor-pointer"
             >
               Next
             </button>
@@ -951,9 +951,9 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
       {/* Confirmation Modal Delete */}
       {deletingId !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800">Confirm Deletion</h3>
-            <p className="text-sm text-slate-600">Are you sure you want to delete this vehicle? This action cannot be undone.</p>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-200 dark:border-slate-700">
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Confirm Deletion</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Are you sure you want to delete this vehicle? This action cannot be undone.</p>
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => confirmDelete(deletingId)}
@@ -963,7 +963,7 @@ const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
               </button>
               <button
                 onClick={() => setDeletingId(null)}
-                className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition cursor-pointer"
+                className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-sm transition cursor-pointer"
               >
                 Cancel
               </button>

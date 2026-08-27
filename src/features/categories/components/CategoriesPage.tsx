@@ -165,7 +165,6 @@ export const CategoriesPage: React.FC = () => {
     setDailyRate('');
   };
 
-  // Libellés pour les menus déroulants de tri
   const sortByLabels: Record<string, string> = {
     'name': 'Sort by Name',
     'dailyRate': 'Sort by Rate'
@@ -176,28 +175,36 @@ export const CategoriesPage: React.FC = () => {
     'DESC': 'Descending'
   };
 
+  const limitLabels: Record<string, string> = {
+    '5': '5 per page',
+    '10': '10 per page',
+    '20': '20 per page',
+    '50': '50 per page'
+  };
+
   return (
     <div className="space-y-8 relative">
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Vehicle Categories</h2>
-        <p className="text-slate-600">Manage types of vehicles and their daily rental rates.</p>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Vehicle Categories</h2>
+        <p className="text-slate-600 dark:text-slate-400">Manage types of vehicles and their daily rental rates.</p>
       </div>
 
       {successMessage && (
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center space-x-3 text-sm transition-all animate-bounce">
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-slate-900 dark:bg-slate-800 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center space-x-3 text-sm transition-all animate-bounce border border-slate-700">
           <span className="text-emerald-400 text-lg">✅</span>
           <span className="font-medium">{successMessage}</span>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
-          <h3 className="text-lg font-semibold text-slate-800">
+        {/* Formulaire Ajout / Modification */}
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 h-fit space-y-4">
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
             {editingId ? 'Edit Category' : 'Add New Category'}
           </h3>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
+            <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
               <span className="flex items-center space-x-2">
                 <span>⚠️</span>
                 <span>{error}</span>
@@ -208,7 +215,7 @@ export const CategoriesPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Name</label>
+              <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase mb-1">Name</label>
               <input 
                 type="text" 
                 value={name} 
@@ -217,12 +224,12 @@ export const CategoriesPage: React.FC = () => {
                 onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please fill out this field.')}
                 onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
                 placeholder="SUV, Sedan..." 
-                className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Description</label>
+              <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase mb-1">Description</label>
               <textarea 
                 value={description} 
                 onChange={(e) => setDescription(e.target.value)} 
@@ -231,12 +238,12 @@ export const CategoriesPage: React.FC = () => {
                 onInput={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('')}
                 rows={3} 
                 placeholder="Short description..." 
-                className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs resize-none" 
+                className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs resize-none" 
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold tracking-wider text-slate-600 uppercase mb-1">Daily Rate ($)</label>
+              <label className="block text-xs font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase mb-1">Daily Rate ($)</label>
               <input 
                 type="number" 
                 step="0.01" 
@@ -246,7 +253,7 @@ export const CategoriesPage: React.FC = () => {
                 onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please fill out this field.')}
                 onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
                 placeholder="50.00" 
-                className="w-full px-3.5 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
+                className="w-full px-3.5 py-2.5 bg-slate-50/50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs" 
               />
             </div>
 
@@ -262,7 +269,7 @@ export const CategoriesPage: React.FC = () => {
                 <button 
                   type="button" 
                   onClick={resetForm} 
-                  className="py-2.5 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition cursor-pointer"
+                  className="py-2.5 px-4 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-xl transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -271,10 +278,41 @@ export const CategoriesPage: React.FC = () => {
           </form>
         </div>
 
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-          <h3 className="text-lg font-semibold text-slate-800">Existing Categories</h3>
+        {/* Liste et Filtres */}
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Existing Categories</h3>
+            
+            {/* Limit Dropdown */}
+            <div className="relative custom-dropdown w-full sm:w-40">
+              <button
+                type="button"
+                onClick={() => setActiveDropdown(activeDropdown === 'limit' ? null : 'limit')}
+                className="w-full flex items-center justify-between bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs text-left cursor-pointer"
+              >
+                <span className="font-medium">{limitLabels[limit.toString()] || `${limit} per page`}</span>
+                <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${activeDropdown === 'limit' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              {activeDropdown === 'limit' && (
+                <div className="absolute right-0 z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
+                  {Object.entries(limitLabels).map(([val, label]) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => { setLimit(Number(val)); setPage(1); setActiveDropdown(null); }}
+                      className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between cursor-pointer ${limit === Number(val) ? 'bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+                    >
+                      {label}
+                      {limit === Number(val) && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 items-center">
+          {/* Barre de recherche et filtres de tri */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 items-center">
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -286,12 +324,12 @@ export const CategoriesPage: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
                 placeholder="Search..." 
-                className="w-full pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
+                className="w-full pl-9 pr-8 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
               />
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer"
+                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold cursor-pointer"
                 >
                   ✕
                 </button>
@@ -305,7 +343,7 @@ export const CategoriesPage: React.FC = () => {
                 value={maxDailyRate}
                 onChange={(e) => { setMaxDailyRate(e.target.value); setPage(1); }}
                 placeholder="Max Rate ($)" 
-                className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
+                className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs"
               />
             </div>
 
@@ -314,49 +352,22 @@ export const CategoriesPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveDropdown(activeDropdown === 'filterSort' ? null : 'filterSort')}
-                className="w-full flex items-center justify-between bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs text-left cursor-pointer"
+                className="w-full flex items-center justify-between bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs text-left cursor-pointer"
               >
                 <span className="font-medium">{sortByLabels[sortBy]}</span>
                 <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${activeDropdown === 'filterSort' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
               {activeDropdown === 'filterSort' && (
-                <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
+                <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1">
                   {Object.entries(sortByLabels).map(([val, label]) => (
                     <button
                       key={val}
                       type="button"
                       onClick={() => { setSortBy(val); setActiveDropdown(null); }}
-                      className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between cursor-pointer ${sortBy === val ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                      className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between cursor-pointer ${sortBy === val ? 'bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
                     >
                       {label}
                       {sortBy === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Sort Order Custom Dropdown */}
-            <div className="relative custom-dropdown">
-              <button
-                type="button"
-                onClick={() => setActiveDropdown(activeDropdown === 'filterOrder' ? null : 'filterOrder')}
-                className="w-full flex items-center justify-between bg-white border border-slate-300 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-2xs text-left cursor-pointer"
-              >
-                <span className="font-medium">{sortOrderLabels[sortOrder]}</span>
-                <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${activeDropdown === 'filterOrder' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-              </button>
-              {activeDropdown === 'filterOrder' && (
-                <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1">
-                  {Object.entries(sortOrderLabels).map(([val, label]) => (
-                    <button
-                      key={val}
-                      type="button"
-                      onClick={() => { setSortOrder(val as 'ASC' | 'DESC'); setActiveDropdown(null); }}
-                      className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between cursor-pointer ${sortOrder === val ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
-                    >
-                      {label}
-                      {sortOrder === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
                     </button>
                   ))}
                 </div>
@@ -367,14 +378,14 @@ export const CategoriesPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
+                <tr className="border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                   <th className="py-3 px-4">Name</th>
                   <th className="py-3 px-4">Description</th>
                   <th className="py-3 px-4">Daily Rate</th>
                   <th className="py-3 px-4">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm text-slate-700 dark:text-slate-300">
                 {loadingList ? (
                   <tr>
                     <td colSpan={4} className="py-6 text-center text-slate-400">Loading categories...</td>
@@ -387,14 +398,14 @@ export const CategoriesPage: React.FC = () => {
                   </tr>
                 ) : (
                   categories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-slate-50 transition">
-                      <td className="py-3 px-4 font-semibold text-slate-900">{cat.name}</td>
-                      <td className="py-3 px-4 text-slate-500">{cat.description}</td>
-                      <td className="py-3 px-4 font-medium text-purple-600">${cat.dailyRate}</td>
+                    <tr key={cat.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                      <td className="py-3 px-4 font-semibold text-slate-900 dark:text-white">{cat.name}</td>
+                      <td className="py-3 px-4 text-slate-500 dark:text-slate-400">{cat.description}</td>
+                      <td className="py-3 px-4 font-medium text-purple-600 dark:text-purple-400">${cat.dailyRate}</td>
                       <td className="py-3 px-4">
                         {deletingId === cat.id ? (
-                          <div className="flex items-center space-x-2 bg-red-50 p-1.5 rounded-xl border border-red-200 shadow-sm">
-                            <span className="text-xs text-red-700 font-semibold px-1">Delete?</span>
+                          <div className="flex items-center space-x-2 bg-red-50 dark:bg-red-950/50 p-1.5 rounded-xl border border-red-200 dark:border-red-900 shadow-sm">
+                            <span className="text-xs text-red-700 dark:text-red-400 font-semibold px-1">Delete?</span>
                             <button 
                               onClick={() => confirmDelete(cat.id)} 
                               className="px-2.5 py-1 bg-red-600 text-white text-xs rounded-lg font-medium hover:bg-red-700 transition shadow-sm cursor-pointer"
@@ -403,7 +414,7 @@ export const CategoriesPage: React.FC = () => {
                             </button>
                             <button 
                               onClick={() => setDeletingId(null)} 
-                              className="px-2.5 py-1 bg-slate-200 text-slate-700 text-xs rounded-lg font-medium hover:bg-slate-300 transition cursor-pointer"
+                              className="px-2.5 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-lg font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition cursor-pointer"
                             >
                               No
                             </button>
@@ -412,7 +423,7 @@ export const CategoriesPage: React.FC = () => {
                           <div className="flex items-center gap-2">
                             <button 
                               onClick={() => handleEdit(cat)} 
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition shadow-sm cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-xl transition shadow-sm cursor-pointer"
                             >
                               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -421,7 +432,7 @@ export const CategoriesPage: React.FC = () => {
                             </button>
                             <button 
                               onClick={() => setDeletingId(cat.id)} 
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold rounded-xl transition shadow-sm cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 text-xs font-semibold rounded-xl transition shadow-sm cursor-pointer"
                             >
                               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -439,22 +450,22 @@ export const CategoriesPage: React.FC = () => {
           </div>
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-              <span className="text-xs text-slate-500">
+            <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800">
+              <span className="text-xs text-slate-500 dark:text-slate-400">
                 Page {page} of {totalPages}
               </span>
               <div className="flex gap-2">
                 <button
                   onClick={() => setPage((p) => Math.max(p - 1, 1))}
                   disabled={page === 1}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg transition disabled:opacity-40 cursor-pointer"
                 >
                   Previous
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                   disabled={page === totalPages}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition disabled:opacity-40 cursor-pointer"
+                  className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg transition disabled:opacity-40 cursor-pointer"
                 >
                   Next
                 </button>

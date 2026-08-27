@@ -234,9 +234,9 @@ export const ReservationsPage: React.FC = () => {
 
   const getStatusBadgeClass = (status: string) => {
     const s = status?.toLowerCase();
-    if (s === 'confirmed' || s === 'verified') return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    if (s === 'rejected' || s === 'cancelled') return 'bg-red-50 text-red-700 border-red-200';
-    return 'bg-amber-50 text-amber-700 border-amber-200';
+    if (s === 'confirmed' || s === 'verified') return 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-700';
+    if (s === 'rejected' || s === 'cancelled') return 'bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800';
+    return 'bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700';
   };
 
   const formatDate = (dateString: string) => {
@@ -269,51 +269,51 @@ export const ReservationsPage: React.FC = () => {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-800">Reservations Panel</h2>
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Reservations Panel</h2>
       </div>
 
       {successMessage && (
-        <div className="bg-emerald-100 text-emerald-800 p-3 rounded-lg text-sm transition-all duration-300">{successMessage}</div>
+        <div className="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 p-3 rounded-lg text-sm transition-all duration-300">{successMessage}</div>
       )}
 
       {error && (
-        <div className="bg-red-100 text-red-800 p-3 rounded-lg text-sm">{error}</div>
+        <div className="bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200 p-3 rounded-lg text-sm">{error}</div>
       )}
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 pb-6 border-b border-slate-100 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 pb-6 border-b border-slate-100 dark:border-slate-700 items-center">
           
           <div className="lg:col-span-2">
-            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 tracking-wider">Search</label>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1 tracking-wider">Search</label>
             <input 
               type="text"
               placeholder="Search vehicle, user..."
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
-              className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs"
+              className="w-full bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs"
             />
           </div>
 
           <div className="relative custom-dropdown">
-            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 tracking-wider">Status Filter</label>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1 tracking-wider">Status Filter</label>
             <button
               type="button"
               onClick={() => setActiveDropdown(activeDropdown === 'status' ? null : 'status')}
-              className="w-full flex items-center justify-between bg-slate-50/50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 hover:bg-slate-100/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs text-left"
+              className="w-full flex items-center justify-between bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100/60 dark:hover:bg-slate-600/60 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs text-left"
             >
               <span className="font-medium truncate">{statusLabels[statusFilter]}</span>
-              <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-1 ${activeDropdown === 'status' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              <svg className={`w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200 shrink-0 ml-1 ${activeDropdown === 'status' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             
             {activeDropdown === 'status' && (
-              <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
                 {Object.entries(statusLabels).map(([val, label]) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => { setStatusFilter(val); setPage(1); setActiveDropdown(null); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${statusFilter === val ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${statusFilter === val ? 'bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                   >
                     {label}
                     {statusFilter === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -324,7 +324,7 @@ export const ReservationsPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 tracking-wider">From Date</label>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1 tracking-wider">From Date</label>
             <input 
               type="date"
               value={startDateFilter}
@@ -336,40 +336,40 @@ export const ReservationsPage: React.FC = () => {
                   setEndDateFilter('');
                 }
               }}
-              className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs"
+              className="w-full bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 tracking-wider">To Date</label>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1 tracking-wider">To Date</label>
             <input 
               type="date"
               value={endDateFilter}
               min={startDateFilter}
               onChange={(e) => { setEndDateFilter(e.target.value); setPage(1); }}
-              className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs"
+              className="w-full bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs"
             />
           </div>
 
           <div className="relative custom-dropdown">
-            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1 tracking-wider">Sort By</label>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1 tracking-wider">Sort By</label>
             <button
               type="button"
               onClick={() => setActiveDropdown(activeDropdown === 'sort' ? null : 'sort')}
-              className="w-full flex items-center justify-between bg-slate-50/50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 hover:bg-slate-100/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs text-left"
+              className="w-full flex items-center justify-between bg-slate-50/50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100/60 dark:hover:bg-slate-600/60 focus:bg-white dark:focus:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs text-left"
             >
               <span className="font-medium truncate">{sortByLabels[sortBy]}</span>
-              <svg className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-1 ${activeDropdown === 'sort' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              <svg className={`w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-200 shrink-0 ml-1 ${activeDropdown === 'sort' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
 
             {activeDropdown === 'sort' && (
-              <div className="absolute z-20 mt-2 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute z-20 mt-2 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
                 {Object.entries(sortByLabels).map(([val, label]) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => { setSortBy(val); setActiveDropdown(null); }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${sortBy === val ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center justify-between ${sortBy === val ? 'bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                   >
                     {label}
                     {sortBy === val && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -384,7 +384,7 @@ export const ReservationsPage: React.FC = () => {
         <div>
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b text-xs font-semibold text-slate-500 uppercase">
+              <tr className="border-b border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                 <th className="py-3 px-4">Vehicle</th>
                 <th className="py-3 px-4">Category / Agency</th>
                 <th className="py-3 px-4">User</th>
@@ -395,14 +395,14 @@ export const ReservationsPage: React.FC = () => {
                 <th className="py-3 px-4">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y text-sm text-slate-700">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700 text-sm text-slate-700 dark:text-slate-200">
               {loadingList ? (
                 <tr>
-                  <td colSpan={8} className="py-6 text-center text-slate-400">Loading reservations...</td>
+                  <td colSpan={8} className="py-6 text-center text-slate-400 dark:text-slate-500">Loading reservations...</td>
                 </tr>
               ) : reservations.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-6 text-center text-slate-400 italic">No reservations found.</td>
+                  <td colSpan={8} className="py-6 text-center text-slate-400 dark:text-slate-500 italic">No reservations found.</td>
                 </tr>
               ) : (
                 reservations.map((res) => {
@@ -442,46 +442,46 @@ export const ReservationsPage: React.FC = () => {
                     'N/A';
 
                   return (
-                    <tr key={res.id} className="hover:bg-slate-50/50 transition-colors">
+                    <tr key={res.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors">
                       <td className="py-3 px-4">
                         {vehicleData ? (
                           <div>
-                            <div className="font-medium text-slate-900">
+                            <div className="font-medium text-slate-900 dark:text-slate-100">
                               {vehicleData.brand} {vehicleData.model}
                             </div>
-                            <span className="inline-block mt-0.5 font-mono text-xs font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">
+                            <span className="inline-block mt-0.5 font-mono text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 rounded-md border border-purple-100">
                               {vehicleData.licensePlate || vehicleData.registrationNumber}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-slate-400 text-xs italic">
+                          <span className="text-slate-400 dark:text-slate-500 text-xs italic">
                             {vIdStr ? `Loading... (${vIdStr.substring(0, 8)}...)` : 'N/A'}
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-slate-600">
+                      <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
                         {vehicleData ? (
                           <div className="space-y-0.5">
-                            <div className="text-xs font-medium text-slate-800">
-                              Category: <span className="text-slate-600">{categoryName}</span>
+                            <div className="text-xs font-medium text-slate-800 dark:text-slate-100">
+                              Category: <span className="text-slate-600 dark:text-slate-300">{categoryName}</span>
                             </div>
-                            <div className="text-xs text-slate-500">
-                              Agency: <span className="text-slate-600">{agencyName}</span>
+                            <div className="text-xs text-slate-500 dark:text-slate-400">
+                              Agency: <span className="text-slate-600 dark:text-slate-300">{agencyName}</span>
                             </div>
                           </div>
                         ) : (
-                          <span className="text-slate-400 text-xs italic">N/A</span>
+                          <span className="text-slate-400 dark:text-slate-500 text-xs italic">N/A</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-slate-600">
+                      <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
                         {userDisplay}
                       </td>
-                      <td className="py-3 px-4 text-slate-600">
-                        <div className="text-xs font-medium text-slate-800">
-                          From: <span className="text-slate-600">{formatDate(res.startDate)}</span>
+                      <td className="py-3 px-4 text-slate-600 dark:text-slate-300">
+                        <div className="text-xs font-medium text-slate-800 dark:text-slate-100">
+                          From: <span className="text-slate-600 dark:text-slate-300">{formatDate(res.startDate)}</span>
                         </div>
-                        <div className="text-xs text-slate-500 mt-0.5">
-                          To: <span className="text-slate-600">{formatDate(res.endDate)}</span>
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                          To: <span className="text-slate-600 dark:text-slate-300">{formatDate(res.endDate)}</span>
                         </div>
                       </td>
                       <td className="py-3 px-4 font-semibold text-purple-600">${res.depositAmount || '0.00'}</td>
@@ -510,20 +510,20 @@ export const ReservationsPage: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => setActiveActionDropdown(activeActionDropdown === res.id ? null : res.id)}
-                              className="flex items-center justify-between min-w-[120px] bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs text-left"
+                              className="flex items-center justify-between min-w-[120px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all shadow-2xs text-left"
                             >
                               <span className="font-semibold">{res.status}</span>
-                              <svg className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ml-2 ${activeActionDropdown === res.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                              <svg className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-500 transition-transform duration-200 ml-2 ${activeActionDropdown === res.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
 
                             {activeActionDropdown === res.id && (
-                              <div className="absolute right-0 top-full mt-2 z-50 w-36 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
+                              <div className="absolute right-0 top-full mt-2 z-50 w-36 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
                                 {availableStatuses.map((st) => (
                                   <button
                                     key={st}
                                     type="button"
                                     onClick={() => handleStatusChange(res.id, st)}
-                                    className={`w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between ${res.status === st ? 'bg-purple-50 text-purple-700 font-semibold' : 'text-slate-700 hover:bg-slate-50'}`}
+                                    className={`w-full text-left px-3 py-2 text-xs transition-colors flex items-center justify-between ${res.status === st ? 'bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-semibold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600'}`}
                                   >
                                     {st}
                                     {res.status === st && <span className="w-1.5 h-1.5 rounded-full bg-purple-600"></span>}
@@ -532,7 +532,7 @@ export const ReservationsPage: React.FC = () => {
                               </div>
                             )}
                           </div>
-                        ) : <span className="text-xs text-slate-400 italic font-medium">Locked</span>}
+                        ) : <span className="text-xs text-slate-400 dark:text-slate-500 italic font-medium">Locked</span>}
                       </td>
                     </tr>
                   );
@@ -543,21 +543,21 @@ export const ReservationsPage: React.FC = () => {
         </div>
 
         {totalPages > 1 && (
-          <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+          <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-700">
             <button
               onClick={() => setPage(p => Math.max(p - 1, 1))}
               disabled={page === 1}
-              className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 disabled:opacity-40 hover:bg-slate-50 transition cursor-pointer"
+              className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-slate-600 transition cursor-pointer"
             >
               Previous
             </button>
-            <span className="text-sm font-medium text-slate-600">
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
               Page {page} of {totalPages}
             </span>
             <button
               onClick={() => setPage(p => Math.min(p + 1, totalPages))}
               disabled={page === totalPages}
-              className="px-4 py-2 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 disabled:opacity-40 hover:bg-slate-50 transition cursor-pointer"
+              className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-slate-600 transition cursor-pointer"
             >
               Next
             </button>
