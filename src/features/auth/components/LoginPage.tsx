@@ -15,17 +15,40 @@ export const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
+      // 1. Authentification et récupération du token JWT
       const response = await api.post('/login_check', {
         email,
         password,
       });
 
       if (response.data.token) {
-        // CORRECTION 1 : Utilisation de 'owner_token' au lieu de 'admin_token'
         localStorage.setItem('owner_token', response.data.token);
-        navigate('/dashboard');
+
+        // 2. Récupération du profil utilisateur pour vérifier les rôles
+        const userResponse = await api.get('/users/me', {
+          headers: {
+            Authorization: `Bearer ${response.data.token}`,
+          },
+        });
+
+        const userData = userResponse.data;
+        console.log("Données utilisateur reçues :", userData);
+
+        // On récupère le tableau des rôles (ex: ['ROLE_SUPER_ADMIN', 'ROLE_USER'])
+        const roles = userData.roles || [];
+        console.log("Rôles analysés :", roles);
+
+        // 3. Redirection conditionnelle selon la présence de ROLE_SUPER_ADMIN
+        if (roles.includes('ROLE_SUPER_ADMIN')) {
+          console.log("Redirection vers /superadmin/dashboard");
+          navigate('/superadmin/dashboard');
+        } else {
+          console.log("Redirection vers /dashboard");
+          navigate('/dashboard');
+        }
       }
     } catch (err: any) {
+      console.error("Erreur de connexion :", err);
       setError('Invalid credentials or server connection error.');
     } finally {
       setLoading(false);
@@ -40,7 +63,6 @@ export const LoginPage: React.FC = () => {
             🚗
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
-            {/* CORRECTION 2 : Passage de Admin à Owner */}
             LocaCar <span className="text-purple-600">Owner</span>
           </h2>
           <p className="text-sm text-slate-500">

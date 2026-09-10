@@ -8,15 +8,28 @@ import { CategoriesPage } from '../features/categories/components/CategoriesPage
 import { AgenciesPage } from '../features/agency/components/AgenciesPage';
 import { VehiclesPage } from '../features/vehicles/components/VehiclesPage';
 import { ReservationsPage } from '../features/reservations/components/ReservationsPage';
+import { SuperAdminDashboardPage } from '../features/superAdmin/components/SuperAdminDashboardPage';
 
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        
+        {/* ⚡ Redirection directe vers la page de login à l'ouverture de l'app */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Routes protégées avec le Layout partagé */}
+        {/* Route Super Admin (Isolée, sans le menu latéral des Owners) */}
+        <Route
+          path="/superadmin/dashboard"
+          element={
+            <ProtectedRoute>
+              <SuperAdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Routes protégées réservées aux Owners avec le Layout Owner */}
         <Route
           element={
             <ProtectedRoute>
@@ -31,7 +44,7 @@ export const AppRoutes = () => {
           <Route path="/reservations" element={<ReservationsPage />} />
         </Route>
         
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
