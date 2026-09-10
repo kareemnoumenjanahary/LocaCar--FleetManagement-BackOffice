@@ -3,8 +3,8 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import { api } from '../../api/axiosInstance';
 
-export const AdminLayout = () => {
-  const [currentAdmin, setCurrentAdmin] = useState<{ firstName?: string; lastName?: string; email?: string } | null>(null);
+export const OwnerLayout = () => {
+  const [currentOwner, setCurrentOwner] = useState<{ firstName?: string; lastName?: string; email?: string } | null>(null);
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
 
@@ -17,7 +17,6 @@ export const AdminLayout = () => {
 
   const applyTheme = (dark: boolean) => {
     const root = document.documentElement;
-
     
     root.classList.toggle('dark', dark);
     root.style.colorScheme = dark ? 'dark' : 'light';
@@ -37,25 +36,27 @@ export const AdminLayout = () => {
   };
 
   useEffect(() => {
-    const fetchCurrentAdmin = async () => {
+    const fetchCurrentOwner = async () => {
       try {
         const response = await api.get('/users/me');
-        setCurrentAdmin(response.data);
+        setCurrentOwner(response.data);
       } catch (err) {
-        const cachedAdmin = localStorage.getItem('admin_user');
-        if (cachedAdmin) {
-          setCurrentAdmin(JSON.parse(cachedAdmin));
+        const cachedOwner = localStorage.getItem('owner_user') || localStorage.getItem('admin_user');
+        if (cachedOwner) {
+          setCurrentOwner(JSON.parse(cachedOwner));
         } else {
-          setCurrentAdmin({ firstName: 'Admin', lastName: 'LocaCar', email: 'admin@locacar.com' });
+          setCurrentOwner({ firstName: 'Owner', lastName: 'LocaCar', email: 'owner@locacar.com' });
         }
       }
     };
-    fetchCurrentAdmin();
+    fetchCurrentOwner();
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
+    localStorage.removeItem('owner_token');
     localStorage.removeItem('admin_user');
+    localStorage.removeItem('owner_user');
     window.location.href = '/login';
   };
 
@@ -63,7 +64,7 @@ export const AdminLayout = () => {
     <div className="flex h-screen bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 overflow-hidden transition-colors">
       <aside className="w-64 bg-slate-900 text-slate-100 p-6 flex flex-col justify-between shadow-xl">
         <div>
-          <h1 className="text-xl font-bold mb-8 text-purple-400">LocaCar Admin</h1>
+          <h1 className="text-xl font-bold mb-8 text-purple-400">LocaCar Owner</h1>
           <nav className="space-y-2">
             <Link to="/dashboard" className={`block px-3 py-2.5 rounded-xl transition font-medium ${location.pathname === '/dashboard' ? 'bg-purple-600 text-white' : 'hover:bg-slate-800'}`}>📊 Dashboard</Link>
             <Link to="/categories" className={`block px-3 py-2.5 rounded-xl transition font-medium ${location.pathname === '/categories' ? 'bg-purple-600 text-white' : 'hover:bg-slate-800'}`}>📁 Categories</Link>
@@ -94,14 +95,14 @@ export const AdminLayout = () => {
 
           <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 px-4 py-1.5 rounded-xl transition-colors">
             <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
-              {currentAdmin?.firstName ? currentAdmin.firstName.charAt(0).toUpperCase() : 'A'}
+              {currentOwner?.firstName ? currentOwner.firstName.charAt(0).toUpperCase() : 'O'}
             </div>
             <div className="text-left">
               <div className="text-xs font-bold text-slate-800 dark:text-slate-100">
-                {currentAdmin ? `${currentAdmin.firstName || ''} ${currentAdmin.lastName || ''}`.trim() : 'Loading...'}
+                {currentOwner ? `${currentOwner.firstName || ''} ${currentOwner.lastName || ''}`.trim() : 'Loading...'}
               </div>
               <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                {currentAdmin?.email || 'admin@locacar.com'}
+                {currentOwner?.email || 'owner@locacar.com'}
               </div>
             </div>
             <span className="ml-2 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Online"></span>

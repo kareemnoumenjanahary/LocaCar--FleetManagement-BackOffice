@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../features/auth/components/LoginPage';
 import { ProtectedRoute } from '../shared/components/ProtectedRoute';
-import { AdminLayout } from '../shared/components/layouts/AdminLayout';
+import { OwnerLayout } from '../shared/components/layouts/OwnerLayout';
 import { DashboardPage } from '../features/dashboard/components/DashboardPage';
 import { CategoriesPage } from '../features/categories/components/CategoriesPage';
 import { AgenciesPage } from '../features/agency/components/AgenciesPage';
@@ -20,7 +20,7 @@ export const AppRoutes = () => {
         <Route
           element={
             <ProtectedRoute>
-              <AdminLayout />
+              <OwnerLayout />
             </ProtectedRoute>
           }
         >

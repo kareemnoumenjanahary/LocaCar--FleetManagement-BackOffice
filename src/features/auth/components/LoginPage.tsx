@@ -21,7 +21,8 @@ export const LoginPage: React.FC = () => {
       });
 
       if (response.data.token) {
-        localStorage.setItem('admin_token', response.data.token);
+        // CORRECTION 1 : Utilisation de 'owner_token' au lieu de 'admin_token'
+        localStorage.setItem('owner_token', response.data.token);
         navigate('/dashboard');
       }
     } catch (err: any) {
@@ -39,7 +40,8 @@ export const LoginPage: React.FC = () => {
             🚗
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
-            LocaCar <span className="text-purple-600">Admin</span>
+            {/* CORRECTION 2 : Passage de Admin à Owner */}
+            LocaCar <span className="text-purple-600">Owner</span>
           </h2>
           <p className="text-sm text-slate-500">
             Sign in to access your management dashboard
@@ -64,7 +66,7 @@ export const LoginPage: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
-              placeholder="admin@locacar.com"
+              placeholder="owner@locacar.com"
             />
           </div>
 
