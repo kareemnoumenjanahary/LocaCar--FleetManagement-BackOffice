@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../../shared/api/axiosInstance';
-import { X, CreditCard } from 'lucide-react';
+import { ChevronDown, X, CreditCard } from 'lucide-react';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -31,11 +31,15 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await api.get('/admin/subscription-plans'); // Adaptez l'endpoint si nécessaire
-        setPlans(response.data);
+        const response = await api.get('/admin/subscription-plans');
+
+        // The API may return an array directly or wrap it in "plans" or "data".
+        const plansData =
+          response.data?.plans ?? response.data?.data ?? response.data;
+
+        setPlans(Array.isArray(plansData) ? plansData : []);
       } catch (error) {
-        console.error('Erreur lors du chargement des plans', error);
-        // Fallback par défaut si la route des plans n'est pas encore appelée ainsi
+        console.error('Error while loading plans', error);
         setPlans([]);
       }
     };
@@ -119,22 +123,30 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <label className={`block text-xs font-semibold uppercase tracking-wider mb-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               Plan d'abonnement
             </label>
-            <select
-              value={selectedPlanId}
-              onChange={(e) => setSelectedPlanId(e.target.value)}
-              className={`w-full px-4 py-2.5 rounded-xl text-sm border outline-none transition-all ${
-                isDarkMode 
-                  ? 'bg-slate-950 border-slate-800 text-white focus:border-blue-500' 
-                  : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500'
-              }`}
-            >
-              <option value="">-- Conserver l'actuel ({subscription.planName}) --</option>
-              {plans.map((plan) => (
-                <option key={plan.id} value={plan.id}>
-                  {plan.name}
-                </option>
-              ))}
-            </select>
+            <div className="group relative">
+              <select
+                value={selectedPlanId}
+                onChange={(e) => setSelectedPlanId(e.target.value)}
+                className={`w-full appearance-none rounded-xl border px-4 py-3 pr-11 text-sm font-medium outline-none transition-all duration-200 ${
+                  isDarkMode
+                    ? 'border-slate-700 bg-slate-950 text-white shadow-inner shadow-black/20 hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                    : 'border-slate-200 bg-slate-50 text-slate-900 shadow-sm hover:border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                }`}
+              >
+                <option value="">Keep current ({subscription.planName})</option>
+                {Array.isArray(plans) && plans.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                aria-hidden="true"
+                className={`pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 transition-transform duration-200 group-focus-within:rotate-180 ${
+                  isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                }`}
+              />
+            </div>
             <p className={`text-[11px] mt-1 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
               Plan actuel : <span className="font-semibold text-emerald-400">{subscription.planName}</span>
             </p>
@@ -145,20 +157,28 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <label className={`block text-xs font-semibold uppercase tracking-wider mb-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               Statut de l'abonnement
             </label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className={`w-full px-4 py-2.5 rounded-xl text-sm border outline-none transition-all ${
-                isDarkMode 
-                  ? 'bg-slate-950 border-slate-800 text-white focus:border-blue-500' 
-                  : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500'
-              }`}
-            >
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="PENDING">PENDING</option>
-              <option value="EXPIRED">EXPIRED</option>
-              <option value="CANCELLED">CANCELLED</option>
-            </select>
+            <div className="group relative">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className={`w-full appearance-none rounded-xl border px-4 py-3 pr-11 text-sm font-medium outline-none transition-all duration-200 ${
+                  isDarkMode
+                    ? 'border-slate-700 bg-slate-950 text-white shadow-inner shadow-black/20 hover:border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                    : 'border-slate-200 bg-slate-50 text-slate-900 shadow-sm hover:border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                }`}
+              >
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="PENDING">PENDING</option>
+                <option value="EXPIRED">EXPIRED</option>
+                <option value="CANCELLED">CANCELLED</option>
+              </select>
+              <ChevronDown
+                aria-hidden="true"
+                className={`pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 transition-transform duration-200 group-focus-within:rotate-180 ${
+                  isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                }`}
+              />
+            </div>
           </div>
 
           <div className="flex justify-end space-x-3 pt-4 border-t border-slate-800/60">
