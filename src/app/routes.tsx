@@ -8,23 +8,23 @@ import { CategoriesPage } from '../features/categories/components/CategoriesPage
 import { AgenciesPage } from '../features/agency/components/AgenciesPage';
 import { VehiclesPage } from '../features/vehicles/components/VehiclesPage';
 import { ReservationsPage } from '../features/reservations/components/ReservationsPage';
-import { SuperAdminDashboardPage } from '../features/superAdmin/components/SuperAdminDashboardPage';
+import { SuperAdminPage } from '../features/superAdmin/components/SuperAdminDashboardPage';
 
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        
-        {/* ⚡ Redirection directe vers la page de login à l'ouverture de l'app */}
+
+        {/* Redirection directe vers la page de login à l'ouverture de l'app */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Route Super Admin (Isolée, sans le menu latéral des Owners) */}
+        {/* Route Super Admin isolée, sans le menu latéral des Owners */}
         <Route
           path="/superadmin/dashboard"
           element={
             <ProtectedRoute>
-              <SuperAdminDashboardPage />
+              <SuperAdminPage />
             </ProtectedRoute>
           }
         />
@@ -43,7 +43,7 @@ export const AppRoutes = () => {
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/reservations" element={<ReservationsPage />} />
         </Route>
-        
+
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
