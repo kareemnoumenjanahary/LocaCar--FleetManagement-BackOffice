@@ -7,6 +7,8 @@ import {
   Loader2,
   Mail,
   Phone,
+  SlidersHorizontal,
+  ChevronDown,
 } from 'lucide-react';
 import { api } from '../../../shared/api/axiosInstance';
 import { CustomerAccountModal } from './CustomerAccountModal';
@@ -30,6 +32,10 @@ export const CustomersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
+
+  const [accountFilter, setAccountFilter] = useState<
+    'all' | 'with-account' | 'without-account'
+  >('all');
 
   const [isDark, setIsDark] = useState(false);
 
@@ -99,12 +105,20 @@ export const CustomersPage = () => {
   const filteredCustomers = customers.filter((customer) => {
     const searchValue = search.toLowerCase();
 
-    return (
+    const matchesSearch =
       customer.firstName.toLowerCase().includes(searchValue) ||
       customer.lastName.toLowerCase().includes(searchValue) ||
       customer.email?.toLowerCase().includes(searchValue) ||
-      customer.phone.toLowerCase().includes(searchValue)
-    );
+      customer.phone.toLowerCase().includes(searchValue);
+
+    const matchesAccountFilter =
+      accountFilter === 'all' ||
+      (accountFilter === 'with-account' &&
+        customer.userAccount !== null) ||
+      (accountFilter === 'without-account' &&
+        !customer.userAccount);
+
+    return matchesSearch && matchesAccountFilter;
   });
 
   return (
@@ -195,19 +209,52 @@ export const CustomersPage = () => {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-        <div className="relative">
-          <Search
-            size={19}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-          />
+        <div className="flex flex-col gap-3 md:flex-row">
+          <div className="relative flex-1">
+            <Search
+              size={19}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            />
 
-          <input
-            type="text"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search for a customer..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-purple-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
-          />
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search for a customer..."
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/10 dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+            />
+          </div>
+
+          <div className="relative w-full md:w-56">
+            <SlidersHorizontal
+              size={18}
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-purple-500"
+            />
+
+            <select
+              value={accountFilter}
+              onChange={(event) =>
+                setAccountFilter(
+                  event.target.value as
+                    | 'all'
+                    | 'with-account'
+                    | 'without-account'
+                )
+              }
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-10 text-sm font-medium text-slate-700 outline-none transition hover:border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/10 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:border-purple-500"
+            >
+              <option value="all">All Customers</option>
+              <option value="with-account">With Account</option>
+              <option value="without-account">
+                Without Account
+              </option>
+            </select>
+
+            <ChevronDown
+              size={18}
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+            />
+          </div>
         </div>
       </div>
 
