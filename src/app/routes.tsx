@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../features/auth/components/LoginPage';
@@ -8,6 +9,7 @@ import { CategoriesPage } from '../features/categories/components/CategoriesPage
 import { AgenciesPage } from '../features/agency/components/AgenciesPage';
 import { VehiclesPage } from '../features/vehicles/components/VehiclesPage';
 import { ReservationsPage } from '../features/reservations/components/ReservationsPage';
+import { CustomersPage } from '../features/Customer/components/CustomersPage';
 import { SuperAdminPage } from '../features/superAdmin/components/SuperAdminDashboardPage';
 
 export const AppRoutes = () => {
@@ -16,10 +18,8 @@ export const AppRoutes = () => {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Redirection directe vers la page de login à l'ouverture de l'app */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Route Super Admin isolée, sans le menu latéral des Owners */}
         <Route
           path="/superadmin/dashboard"
           element={
@@ -29,7 +29,6 @@ export const AppRoutes = () => {
           }
         />
 
-        {/* Routes protégées réservées aux Owners avec le Layout Owner */}
         <Route
           element={
             <ProtectedRoute>
@@ -42,6 +41,7 @@ export const AppRoutes = () => {
           <Route path="/agencies" element={<AgenciesPage />} />
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/reservations" element={<ReservationsPage />} />
+          <Route path="/customers" element={<CustomersPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
