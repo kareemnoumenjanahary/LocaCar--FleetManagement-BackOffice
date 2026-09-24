@@ -14,7 +14,7 @@ export const CategoriesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [maxDailyRate, setMaxDailyRate] = useState('');
   const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('ASC');
+  const [sortOrder] = useState<'ASC' | 'DESC'>('ASC');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -170,10 +170,7 @@ export const CategoriesPage: React.FC = () => {
     'dailyRate': 'Sort by Rate'
   };
 
-  const sortOrderLabels: Record<string, string> = {
-    'ASC': 'Ascending',
-    'DESC': 'Descending'
-  };
+
 
   const limitLabels: Record<string, string> = {
     '5': '5 per page',

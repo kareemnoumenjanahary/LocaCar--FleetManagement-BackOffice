@@ -18,7 +18,7 @@ export const AgenciesPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('ASC');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
   const [name, setName] = useState('');

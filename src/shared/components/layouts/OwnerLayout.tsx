@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import { api } from '../../api/axiosInstance';
@@ -159,6 +159,16 @@ export const OwnerLayout = () => {
             >
               👤 Customers
             </Link>
+            <Link
+  to="/employees"
+  className={`block px-3 py-2.5 rounded-xl transition font-medium ${
+    location.pathname === '/employees'
+      ? 'bg-purple-600 text-white'
+      : 'hover:bg-slate-800'
+  }`}
+>
+  👥 Employees
+</Link>
           </nav>
         </div>
 

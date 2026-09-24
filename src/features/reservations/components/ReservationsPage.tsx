@@ -34,7 +34,7 @@ export const ReservationsPage: React.FC = () => {
   const [endDateFilter, setEndDateFilter] = useState('');
 
   const [sortBy, setSortBy] = useState('startDate');
-  const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
+  const [sortOrder] = useState<'ASC' | 'DESC'>('DESC');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 

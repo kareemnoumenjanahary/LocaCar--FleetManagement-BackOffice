@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from '../features/auth/components/LoginPage';
 import { ProtectedRoute } from '../shared/components/ProtectedRoute';
@@ -10,6 +8,7 @@ import { AgenciesPage } from '../features/agency/components/AgenciesPage';
 import { VehiclesPage } from '../features/vehicles/components/VehiclesPage';
 import { ReservationsPage } from '../features/reservations/components/ReservationsPage';
 import { CustomersPage } from '../features/Customer/components/CustomersPage';
+import EmployeesPage from '../features/Employee/components/EmployeesPage';
 import { SuperAdminPage } from '../features/superAdmin/components/SuperAdminDashboardPage';
 
 export const AppRoutes = () => {
@@ -37,10 +36,17 @@ export const AppRoutes = () => {
           }
         >
           <Route path="/dashboard" element={<DashboardPage />} />
+
           <Route path="/categories" element={<CategoriesPage />} />
+
           <Route path="/agencies" element={<AgenciesPage />} />
+
           <Route path="/vehicles" element={<VehiclesPage />} />
+
           <Route path="/reservations" element={<ReservationsPage />} />
+
+          <Route path="/employees" element={<EmployeesPage />} />
+
           <Route path="/customers" element={<CustomersPage />} />
         </Route>
 
