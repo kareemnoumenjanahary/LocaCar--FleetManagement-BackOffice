@@ -51,6 +51,13 @@ interface RoleForm {
   permissionIds: number[];
 }
 
+interface PermissionForm {
+  name: string;
+  code: string;
+  description: string;
+  category: string;
+}
+
 const emptyForm: EmployeeForm = {
   firstName: '',
   lastName: '',
@@ -68,6 +75,13 @@ const emptyRoleForm: RoleForm = {
   permissionIds: [],
 };
 
+const emptyPermissionForm: PermissionForm = {
+  name: '',
+  code: '',
+  description: '',
+  category: '',
+};
+
 const selectClassName =
   'w-full appearance-none px-4 py-3 pr-10 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 shadow-sm outline-none cursor-pointer transition-all duration-200 hover:border-gray-400 focus:border-black focus:ring-4 focus:ring-black/5';
 
@@ -80,6 +94,8 @@ const EmployeesPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [savingRole, setSavingRole] = useState(false);
+  const [savingPermission, setSavingPermission] =
+    useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [agencyFilter, setAgencyFilter] = useState('');
@@ -88,6 +104,8 @@ const EmployeesPage = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [showPermissionModal, setShowPermissionModal] =
+    useState(false);
 
   const [editingEmployee, setEditingEmployee] =
     useState<Employee | null>(null);
@@ -96,7 +114,11 @@ const EmployeesPage = () => {
     useState<EmployeeRole | null>(null);
 
   const [form, setForm] = useState<EmployeeForm>(emptyForm);
-  const [roleForm, setRoleForm] = useState<RoleForm>(emptyRoleForm);
+  const [roleForm, setRoleForm] =
+    useState<RoleForm>(emptyRoleForm);
+
+  const [permissionForm, setPermissionForm] =
+    useState<PermissionForm>(emptyPermissionForm);
 
   // =========================
   // FETCH EMPLOYEES
@@ -142,7 +164,9 @@ const EmployeesPage = () => {
 
   const fetchEmployeeRoles = async () => {
     try {
-      const response = await api.get('/admin/employee-roles');
+      const response = await api.get(
+        '/admin/employee-roles'
+      );
 
       const data = Array.isArray(response.data)
         ? response.data
@@ -150,7 +174,11 @@ const EmployeesPage = () => {
 
       setEmployeeRoles(data);
     } catch (error) {
-      console.error('Failed to fetch employee roles:', error);
+      console.error(
+        'Failed to fetch employee roles:',
+        error
+      );
+
       setEmployeeRoles([]);
     }
   };
@@ -161,7 +189,9 @@ const EmployeesPage = () => {
 
   const fetchPermissions = async () => {
     try {
-      const response = await api.get('/admin/permissions');
+      const response = await api.get(
+        '/admin/permissions'
+      );
 
       const data = Array.isArray(response.data)
         ? response.data
@@ -169,7 +199,11 @@ const EmployeesPage = () => {
 
       setPermissions(data);
     } catch (error) {
-      console.error('Failed to fetch permissions:', error);
+      console.error(
+        'Failed to fetch permissions:',
+        error
+      );
+
       setPermissions([]);
     }
   };
@@ -211,7 +245,9 @@ const EmployeesPage = () => {
       const matchesSearch =
         fullName.includes(search) ||
         employee.email.toLowerCase().includes(search) ||
-        (employee.phone || '').toLowerCase().includes(search);
+        (employee.phone || '')
+          .toLowerCase()
+          .includes(search);
 
       const matchesAgency =
         !agencyFilter ||
@@ -223,8 +259,10 @@ const EmployeesPage = () => {
 
       const matchesStatus =
         !statusFilter ||
-        (statusFilter === 'active' && employee.isActive) ||
-        (statusFilter === 'inactive' && !employee.isActive);
+        (statusFilter === 'active' &&
+          employee.isActive) ||
+        (statusFilter === 'inactive' &&
+          !employee.isActive);
 
       return (
         matchesSearch &&
@@ -271,7 +309,8 @@ const EmployeesPage = () => {
       phone: employee.phone || '',
       address: employee.address || '',
       agencyId: employee.agency?.id || '',
-      employeeRoleId: employee.employeeRole?.id || '',
+      employeeRoleId:
+        employee.employeeRole?.id || '',
       isActive: employee.isActive,
     });
 
@@ -293,7 +332,9 @@ const EmployeesPage = () => {
   // =========================
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = event.target;
 
@@ -326,13 +367,20 @@ const EmployeesPage = () => {
           form
         );
       } else {
-        await api.post('/admin/employees', form);
+        await api.post(
+          '/admin/employees',
+          form
+        );
       }
 
       await fetchEmployees();
       closeModal();
     } catch (error) {
-      console.error('Failed to save employee:', error);
+      console.error(
+        'Failed to save employee:',
+        error
+      );
+
       alert('Failed to save employee.');
     } finally {
       setSaving(false);
@@ -343,7 +391,9 @@ const EmployeesPage = () => {
   // DELETE EMPLOYEE
   // =========================
 
-  const handleDelete = async (employee: Employee) => {
+  const handleDelete = async (
+    employee: Employee
+  ) => {
     const confirmed = window.confirm(
       `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
     );
@@ -353,11 +403,17 @@ const EmployeesPage = () => {
     }
 
     try {
-      await api.delete(`/admin/employees/${employee.id}`);
+      await api.delete(
+        `/admin/employees/${employee.id}`
+      );
 
       await fetchEmployees();
     } catch (error) {
-      console.error('Failed to delete employee:', error);
+      console.error(
+        'Failed to delete employee:',
+        error
+      );
+
       alert('Failed to delete employee.');
     }
   };
@@ -372,7 +428,9 @@ const EmployeesPage = () => {
     setShowRoleModal(true);
   };
 
-  const openEditRoleModal = (role: EmployeeRole) => {
+  const openEditRoleModal = (
+    role: EmployeeRole
+  ) => {
     setEditingRole(role);
 
     setRoleForm({
@@ -402,7 +460,9 @@ const EmployeesPage = () => {
   // =========================
 
   const handleRoleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = event.target;
 
@@ -412,10 +472,14 @@ const EmployeesPage = () => {
     }));
   };
 
-  const handlePermissionChange = (permissionId: number) => {
+  const handlePermissionChange = (
+    permissionId: number
+  ) => {
     setRoleForm((previous) => {
       const alreadySelected =
-        previous.permissionIds.includes(permissionId);
+        previous.permissionIds.includes(
+          permissionId
+        );
 
       return {
         ...previous,
@@ -423,7 +487,10 @@ const EmployeesPage = () => {
           ? previous.permissionIds.filter(
               (id) => id !== permissionId
             )
-          : [...previous.permissionIds, permissionId],
+          : [
+              ...previous.permissionIds,
+              permissionId,
+            ],
       };
     });
   };
@@ -442,13 +509,20 @@ const EmployeesPage = () => {
           roleForm
         );
       } else {
-        await api.post('/admin/employee-roles', roleForm);
+        await api.post(
+          '/admin/employee-roles',
+          roleForm
+        );
       }
 
       await fetchEmployeeRoles();
       closeRoleModal();
     } catch (error) {
-      console.error('Failed to save employee role:', error);
+      console.error(
+        'Failed to save employee role:',
+        error
+      );
+
       alert('Failed to save employee role.');
     } finally {
       setSavingRole(false);
@@ -459,7 +533,9 @@ const EmployeesPage = () => {
   // DELETE ROLE
   // =========================
 
-  const handleDeleteRole = async (role: EmployeeRole) => {
+  const handleDeleteRole = async (
+    role: EmployeeRole
+  ) => {
     const confirmed = window.confirm(
       `Are you sure you want to delete the role "${role.name}"?`
     );
@@ -469,13 +545,81 @@ const EmployeesPage = () => {
     }
 
     try {
-      await api.delete(`/admin/employee-roles/${role.id}`);
+      await api.delete(
+        `/admin/employee-roles/${role.id}`
+      );
 
       await fetchEmployeeRoles();
       await fetchEmployees();
     } catch (error) {
-      console.error('Failed to delete employee role:', error);
+      console.error(
+        'Failed to delete employee role:',
+        error
+      );
+
       alert('Failed to delete employee role.');
+    }
+  };
+
+  // =========================
+  // PERMISSION MODAL
+  // =========================
+
+  const openCreatePermissionModal = () => {
+    setPermissionForm(emptyPermissionForm);
+    setShowPermissionModal(true);
+  };
+
+  const closePermissionModal = () => {
+    if (savingPermission) {
+      return;
+    }
+
+    setShowPermissionModal(false);
+    setPermissionForm(emptyPermissionForm);
+  };
+
+  // =========================
+  // PERMISSION FORM
+  // =========================
+
+  const handlePermissionInputChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value } = event.target;
+
+    setPermissionForm((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+  };
+
+  const handlePermissionSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+
+    setSavingPermission(true);
+
+    try {
+      await api.post(
+        '/admin/permissions',
+        permissionForm
+      );
+
+      await fetchPermissions();
+      closePermissionModal();
+    } catch (error) {
+      console.error(
+        'Failed to create permission:',
+        error
+      );
+
+      alert('Failed to create permission.');
+    } finally {
+      setSavingPermission(false);
     }
   };
 
@@ -489,6 +633,7 @@ const EmployeesPage = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
         <div>
+
           <h1 className="text-2xl font-bold text-gray-900">
             Employees
           </h1>
@@ -496,6 +641,7 @@ const EmployeesPage = () => {
           <p className="text-gray-500 mt-1">
             Manage your agency employees
           </p>
+
         </div>
 
         <div className="flex gap-3">
@@ -527,6 +673,7 @@ const EmployeesPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
         <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+
           <p className="text-sm text-gray-500">
             Total Employees
           </p>
@@ -534,9 +681,11 @@ const EmployeesPage = () => {
           <p className="text-3xl font-bold text-gray-900 mt-2">
             {totalEmployees}
           </p>
+
         </div>
 
         <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+
           <p className="text-sm text-gray-500">
             Active Employees
           </p>
@@ -544,9 +693,11 @@ const EmployeesPage = () => {
           <p className="text-3xl font-bold text-green-600 mt-2">
             {activeEmployees}
           </p>
+
         </div>
 
         <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+
           <p className="text-sm text-gray-500">
             Inactive Employees
           </p>
@@ -554,6 +705,7 @@ const EmployeesPage = () => {
           <p className="text-3xl font-bold text-gray-500 mt-2">
             {inactiveEmployees}
           </p>
+
         </div>
 
       </div>
@@ -567,6 +719,7 @@ const EmployeesPage = () => {
         <div className="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
 
           <div>
+
             <h2 className="text-lg font-semibold text-gray-900">
               Employee Roles
             </h2>
@@ -574,6 +727,7 @@ const EmployeesPage = () => {
             <p className="text-sm text-gray-500 mt-1">
               Manage the roles available for your employees
             </p>
+
           </div>
 
           <button
@@ -610,13 +764,17 @@ const EmployeesPage = () => {
                   </p>
 
                   {role.description ? (
+
                     <p className="text-sm text-gray-500 mt-1">
                       {role.description}
                     </p>
+
                   ) : (
+
                     <p className="text-sm text-gray-400 mt-1">
                       No description
                     </p>
+
                   )}
 
                   {role.permissions &&
@@ -624,16 +782,18 @@ const EmployeesPage = () => {
 
                     <div className="flex flex-wrap gap-2 mt-3">
 
-                      {role.permissions.map((permission) => (
+                      {role.permissions.map(
+                        (permission) => (
 
-                        <span
-                          key={permission.id}
-                          className="inline-flex px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600"
-                        >
-                          {permission.name}
-                        </span>
+                          <span
+                            key={permission.id}
+                            className="inline-flex px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600"
+                          >
+                            {permission.name}
+                          </span>
 
-                      ))}
+                        )
+                      )}
 
                     </div>
 
@@ -726,12 +886,14 @@ const EmployeesPage = () => {
                 </option>
 
                 {agencies.map((agency) => (
+
                   <option
                     key={agency.id}
                     value={agency.id}
                   >
                     {agency.name}
                   </option>
+
                 ))}
 
               </select>
@@ -781,12 +943,14 @@ const EmployeesPage = () => {
                 </option>
 
                 {employeeRoles.map((role) => (
+
                   <option
                     key={role.id}
                     value={role.id}
                   >
                     {role.name}
                   </option>
+
                 ))}
 
               </select>
@@ -885,7 +1049,9 @@ const EmployeesPage = () => {
 
           <p className="text-sm text-gray-500 mt-1">
             {filteredEmployees.length} employee
-            {filteredEmployees.length !== 1 ? 's' : ''}
+            {filteredEmployees.length !== 1
+              ? 's'
+              : ''}
           </p>
 
         </div>
@@ -954,117 +1120,129 @@ const EmployeesPage = () => {
 
               <tbody>
 
-                {filteredEmployees.map((employee) => (
+                {filteredEmployees.map(
+                  (employee) => (
 
-                  <tr
-                    key={employee.id}
-                    className="border-t border-gray-100 hover:bg-gray-50 transition"
-                  >
+                    <tr
+                      key={employee.id}
+                      className="border-t border-gray-100 hover:bg-gray-50 transition"
+                    >
 
-                    <td className="px-6 py-4">
+                      <td className="px-6 py-4">
 
-                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3">
 
-                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-semibold text-gray-700">
-                          {employee.firstName
-                            .charAt(0)
-                            .toUpperCase()}
+                          <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-semibold text-gray-700">
 
-                          {employee.lastName
-                            .charAt(0)
-                            .toUpperCase()}
+                            {employee.firstName
+                              .charAt(0)
+                              .toUpperCase()}
+
+                            {employee.lastName
+                              .charAt(0)
+                              .toUpperCase()}
+
+                          </div>
+
+                          <div>
+
+                            <p className="font-medium text-gray-900">
+                              {employee.firstName}{' '}
+                              {employee.lastName}
+                            </p>
+
+                            <p className="text-xs text-gray-500">
+                              Employee
+                            </p>
+
+                          </div>
+
                         </div>
 
-                        <div>
+                      </td>
 
-                          <p className="font-medium text-gray-900">
-                            {employee.firstName}{' '}
-                            {employee.lastName}
-                          </p>
+                      <td className="px-6 py-4">
 
-                          <p className="text-xs text-gray-500">
-                            Employee
-                          </p>
+                        <p className="text-sm text-gray-900">
+                          {employee.email}
+                        </p>
+
+                        <p className="text-sm text-gray-500 mt-1">
+                          {employee.phone || '-'}
+                        </p>
+
+                      </td>
+
+                      <td className="px-6 py-4">
+
+                        <span className="text-sm text-gray-900">
+                          {employee.agency?.name || '-'}
+                        </span>
+
+                      </td>
+
+                      <td className="px-6 py-4">
+
+                        <span className="text-sm text-gray-900">
+                          {employee.employeeRole?.name || '-'}
+                        </span>
+
+                      </td>
+
+                      <td className="px-6 py-4">
+
+                        {employee.isActive ? (
+
+                          <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
+                            Active
+                          </span>
+
+                        ) : (
+
+                          <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                            Inactive
+                          </span>
+
+                        )}
+
+                      </td>
+
+                      <td className="px-6 py-4">
+
+                        <div className="flex justify-end gap-2">
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              openEditModal(
+                                employee
+                              )
+                            }
+                            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 transition"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDelete(
+                                employee
+                              )
+                            }
+                            className="px-3 py-1.5 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition"
+                          >
+                            Delete
+                          </button>
 
                         </div>
 
-                      </div>
+                      </td>
 
-                    </td>
+                    </tr>
 
-                    <td className="px-6 py-4">
-
-                      <p className="text-sm text-gray-900">
-                        {employee.email}
-                      </p>
-
-                      <p className="text-sm text-gray-500 mt-1">
-                        {employee.phone || '-'}
-                      </p>
-
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-900">
-                        {employee.agency?.name || '-'}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-900">
-                        {employee.employeeRole?.name || '-'}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-4">
-
-                      {employee.isActive ? (
-
-                        <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
-                          Active
-                        </span>
-
-                      ) : (
-
-                        <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
-                          Inactive
-                        </span>
-
-                      )}
-
-                    </td>
-
-                    <td className="px-6 py-4">
-
-                      <div className="flex justify-end gap-2">
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            openEditModal(employee)
-                          }
-                          className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 transition"
-                        >
-                          Edit
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDelete(employee)
-                          }
-                          className="px-3 py-1.5 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition"
-                        >
-                          Delete
-                        </button>
-
-                      </div>
-
-                    </td>
-
-                  </tr>
-
-                ))}
+                  )
+                )}
 
               </tbody>
 
@@ -1121,8 +1299,6 @@ const EmployeesPage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                {/* First Name */}
-
                 <div>
 
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -1141,8 +1317,6 @@ const EmployeesPage = () => {
                   />
 
                 </div>
-
-                {/* Last Name */}
 
                 <div>
 
@@ -1163,8 +1337,6 @@ const EmployeesPage = () => {
 
                 </div>
 
-                {/* Email */}
-
                 <div>
 
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -1184,8 +1356,6 @@ const EmployeesPage = () => {
 
                 </div>
 
-                {/* Phone */}
-
                 <div>
 
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -1204,8 +1374,6 @@ const EmployeesPage = () => {
 
                 </div>
 
-                {/* Address */}
-
                 <div className="md:col-span-2">
 
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -1223,8 +1391,6 @@ const EmployeesPage = () => {
                   />
 
                 </div>
-
-                {/* Agency */}
 
                 <div>
 
@@ -1246,16 +1412,18 @@ const EmployeesPage = () => {
                         Select an agency
                       </option>
 
-                      {agencies.map((agency) => (
+                      {agencies.map(
+                        (agency) => (
 
-                        <option
-                          key={agency.id}
-                          value={agency.id}
-                        >
-                          {agency.name}
-                        </option>
+                          <option
+                            key={agency.id}
+                            value={agency.id}
+                          >
+                            {agency.name}
+                          </option>
 
-                      ))}
+                        )
+                      )}
 
                     </select>
 
@@ -1280,8 +1448,6 @@ const EmployeesPage = () => {
                   </div>
 
                 </div>
-
-                {/* Employee Role */}
 
                 <div>
 
@@ -1293,26 +1459,34 @@ const EmployeesPage = () => {
 
                     <select
                       name="employeeRoleId"
-                      value={form.employeeRoleId}
-                      onChange={handleInputChange}
+                      value={
+                        form.employeeRoleId
+                      }
+                      onChange={
+                        handleInputChange
+                      }
                       required
-                      className={selectClassName}
+                      className={
+                        selectClassName
+                      }
                     >
 
                       <option value="">
                         Select a role
                       </option>
 
-                      {employeeRoles.map((role) => (
+                      {employeeRoles.map(
+                        (role) => (
 
-                        <option
-                          key={role.id}
-                          value={role.id}
-                        >
-                          {role.name}
-                        </option>
+                          <option
+                            key={role.id}
+                            value={role.id}
+                          >
+                            {role.name}
+                          </option>
 
-                      ))}
+                        )
+                      )}
 
                     </select>
 
@@ -1337,8 +1511,6 @@ const EmployeesPage = () => {
                   </div>
 
                 </div>
-
-                {/* Status */}
 
                 {editingEmployee && (
 
@@ -1356,8 +1528,12 @@ const EmployeesPage = () => {
                             ? 'true'
                             : 'false'
                         }
-                        onChange={handleStatusChange}
-                        className={selectClassName}
+                        onChange={
+                          handleStatusChange
+                        }
+                        className={
+                          selectClassName
+                        }
                       >
 
                         <option value="true">
@@ -1484,7 +1660,9 @@ const EmployeesPage = () => {
                   type="text"
                   name="name"
                   value={roleForm.name}
-                  onChange={handleRoleInputChange}
+                  onChange={
+                    handleRoleInputChange
+                  }
                   required
                   maxLength={100}
                   placeholder="Role name"
@@ -1503,8 +1681,12 @@ const EmployeesPage = () => {
 
                 <textarea
                   name="description"
-                  value={roleForm.description}
-                  onChange={handleRoleInputChange}
+                  value={
+                    roleForm.description
+                  }
+                  onChange={
+                    handleRoleInputChange
+                  }
                   rows={4}
                   placeholder="Describe the responsibilities of this role"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-black focus:ring-4 focus:ring-black/5 resize-none"
@@ -1532,11 +1714,9 @@ const EmployeesPage = () => {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      alert(
-                        'Custom permission creation is not available yet.'
-                      );
-                    }}
+                    onClick={
+                      openCreatePermissionModal
+                    }
                     className="text-sm font-medium text-gray-700 hover:text-black transition"
                   >
                     + Add Permission
@@ -1556,15 +1736,29 @@ const EmployeesPage = () => {
 
                     Object.entries(
                       permissions.reduce<
-                        Record<string, Permission[]>
+                        Record<
+                          string,
+                          Permission[]
+                        >
                       >(
-                        (groups, permission) => {
+                        (
+                          groups,
+                          permission
+                        ) => {
 
-                          if (!groups[permission.category]) {
-                            groups[permission.category] = [];
+                          if (
+                            !groups[
+                              permission.category
+                            ]
+                          ) {
+                            groups[
+                              permission.category
+                            ] = [];
                           }
 
-                          groups[permission.category].push(
+                          groups[
+                            permission.category
+                          ].push(
                             permission
                           );
 
@@ -1595,7 +1789,9 @@ const EmployeesPage = () => {
                           <div className="p-3 space-y-2">
 
                             {categoryPermissions.map(
-                              (permission) => {
+                              (
+                                permission
+                              ) => {
 
                                 const checked =
                                   roleForm.permissionIds.includes(
@@ -1603,14 +1799,19 @@ const EmployeesPage = () => {
                                   );
 
                                 return (
+
                                   <label
-                                    key={permission.id}
+                                    key={
+                                      permission.id
+                                    }
                                     className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition"
                                   >
 
                                     <input
                                       type="checkbox"
-                                      checked={checked}
+                                      checked={
+                                        checked
+                                      }
                                       onChange={() =>
                                         handlePermissionChange(
                                           permission.id
@@ -1622,16 +1823,21 @@ const EmployeesPage = () => {
                                     <div>
 
                                       <p className="text-sm font-medium text-gray-800">
-                                        {permission.name}
+                                        {
+                                          permission.name
+                                        }
                                       </p>
 
                                       <p className="text-xs text-gray-400">
-                                        {permission.code}
+                                        {
+                                          permission.code
+                                        }
                                       </p>
 
                                     </div>
 
                                   </label>
+
                                 );
                               }
                             )}
@@ -1648,12 +1854,15 @@ const EmployeesPage = () => {
                 </div>
 
                 <p className="text-xs text-gray-500 mt-2">
+
                   {roleForm.permissionIds.length}{' '}
                   permission
-                  {roleForm.permissionIds.length !== 1
+                  {roleForm.permissionIds
+                    .length !== 1
                     ? 's'
                     : ''}{' '}
                   selected
+
                 </p>
 
               </div>
@@ -1681,6 +1890,190 @@ const EmployeesPage = () => {
                     : editingRole
                       ? 'Update Role'
                       : 'Create Role'}
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* =========================
+          ADD PERMISSION MODAL
+      ========================= */}
+
+      {showPermissionModal && (
+
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
+
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+
+            <div className="flex items-center justify-between px-6 py-5 border-b">
+
+              <div>
+
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Add Permission
+                </h2>
+
+                <p className="text-sm text-gray-500 mt-1">
+                  Create a custom permission
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={
+                  closePermissionModal
+                }
+                disabled={savingPermission}
+                className="text-gray-500 hover:text-gray-900 text-2xl disabled:opacity-50"
+              >
+                ×
+              </button>
+
+            </div>
+
+            <form
+              onSubmit={
+                handlePermissionSubmit
+              }
+              className="p-6 space-y-5"
+            >
+
+              {/* Name */}
+
+              <div>
+
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Permission Name
+                </label>
+
+                <input
+                  type="text"
+                  name="name"
+                  value={
+                    permissionForm.name
+                  }
+                  onChange={
+                    handlePermissionInputChange
+                  }
+                  required
+                  maxLength={100}
+                  placeholder="View reports"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-black focus:ring-4 focus:ring-black/5"
+                />
+
+              </div>
+
+              {/* Code */}
+
+              <div>
+
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Permission Code
+                </label>
+
+                <input
+                  type="text"
+                  name="code"
+                  value={
+                    permissionForm.code
+                  }
+                  onChange={
+                    handlePermissionInputChange
+                  }
+                  required
+                  maxLength={100}
+                  placeholder="report.view"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-black focus:ring-4 focus:ring-black/5"
+                />
+
+                <p className="text-xs text-gray-400 mt-1">
+                  Use a unique code such as report.view.
+                </p>
+
+              </div>
+
+              {/* Category */}
+
+              <div>
+
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Category
+                </label>
+
+                <input
+                  type="text"
+                  name="category"
+                  value={
+                    permissionForm.category
+                  }
+                  onChange={
+                    handlePermissionInputChange
+                  }
+                  required
+                  maxLength={50}
+                  placeholder="reports"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-black focus:ring-4 focus:ring-black/5"
+                />
+
+              </div>
+
+              {/* Description */}
+
+              <div>
+
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description
+                </label>
+
+                <textarea
+                  name="description"
+                  value={
+                    permissionForm.description
+                  }
+                  onChange={
+                    handlePermissionInputChange
+                  }
+                  rows={3}
+                  maxLength={5000}
+                  placeholder="Describe what this permission allows"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm outline-none shadow-sm transition-all duration-200 hover:border-gray-400 focus:border-black focus:ring-4 focus:ring-black/5 resize-none"
+                />
+
+              </div>
+
+              {/* Buttons */}
+
+              <div className="flex justify-end gap-3 pt-4 border-t">
+
+                <button
+                  type="button"
+                  onClick={
+                    closePermissionModal
+                  }
+                  disabled={savingPermission}
+                  className="px-5 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-50 transition disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={
+                    savingPermission
+                  }
+                  className="px-5 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 transition disabled:opacity-50"
+                >
+                  {savingPermission
+                    ? 'Saving...'
+                    : 'Create Permission'}
                 </button>
 
               </div>
