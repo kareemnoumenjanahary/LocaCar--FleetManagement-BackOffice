@@ -5,6 +5,7 @@ import { api } from '../../../shared/api/axiosInstance';
 import { SubscriptionModal } from './SubscriptionModal';
 import { SubscriptionPlansManagement } from './SubscriptionPlansManagement';
 import { OwnerModal } from './OwnerModal';
+import { CustomSubscriptionRequests } from './CustomSubscriptionRequests';
 
 interface Stats {
   totalOwners: number;
@@ -335,6 +336,11 @@ export const SuperAdminPage: React.FC = () => {
 
         {/* Subscription Plans */}
         <SubscriptionPlansManagement
+          isDarkMode={isDarkMode}
+        />
+
+        {/* Custom Subscription Requests */}
+        <CustomSubscriptionRequests
           isDarkMode={isDarkMode}
         />
 
