@@ -3,9 +3,11 @@ export const SubscriptionPlan = {
   STANDARD: 'STANDARD',
   PREMIUM: 'PREMIUM',
   ENTERPRISE: 'ENTERPRISE',
+  CUSTOM: 'CUSTOM',
 } as const;
 
-export type SubscriptionPlan = typeof SubscriptionPlan[keyof typeof SubscriptionPlan];
+export type SubscriptionPlan =
+  typeof SubscriptionPlan[keyof typeof SubscriptionPlan];
 
 export const SubscriptionStatus = {
   ACTIVE: 'ACTIVE',
@@ -14,7 +16,8 @@ export const SubscriptionStatus = {
   EXPIRED: 'EXPIRED',
 } as const;
 
-export type SubscriptionStatus = typeof SubscriptionStatus[keyof typeof SubscriptionStatus];
+export type SubscriptionStatus =
+  typeof SubscriptionStatus[keyof typeof SubscriptionStatus];
 
 export interface Subscription {
   id: string;
@@ -27,4 +30,21 @@ export interface Subscription {
     firstName: string;
     lastName: string;
   } | null;
+}
+
+export interface OwnerQuota {
+  plan: string;
+  status: string;
+  startDate: string | null;
+  endDate: string | null;
+  agencies: {
+    current: number;
+    max: number;
+    remaining: number;
+  };
+  vehicles: {
+    current: number;
+    max: number;
+    remaining: number;
+  };
 }
